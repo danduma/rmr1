@@ -6,46 +6,15 @@ import pandas as pd
 import plotly.express as px
 import json
 from litellm import completion
-import os
+from llm import get_llm_response
 
-from data_functions import get_survival_data
-
-# GOOGLE_API_KEY = 'Your API Key'
-
-# genai.configure(api_key=GOOGLE_API_KEY)
-# database_path = '/Users/abhi/Desktop/Text_SQL_Proj/Job_Postings.db'
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-default_location = os.path.join(current_dir, "vertexai-api-key.json")  
-file_path = os.environ.get("VERTEXAI_API_KEY_PATH", default_location)
-
-os.environ["VERTEXAI_PROJECT"] = os.environ.get("VERTEXAI_PROJECT", "cognivita")
-os.environ["VERTEXAI_LOCATION"] = os.environ.get("VERTEXAI_LOCATION", "us-central1")
-
-with open(file_path, 'r') as file:
-    vertex_credentials = json.load(file)
+from data_functions import convert_survival_data, get_survival_data
 
 
 def clean_response(response):
     response = response.replace("```sql", "").replace("```json", "").replace("```", "").strip()
     return response
 
-def get_llm_response(question, prompt):
-    
-    messages = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": question}
-    ]
-    
-    response = completion( 
-        model='vertex_ai/gemini-1.5-pro-002',
-        messages=messages,
-        stream=False,
-        vertex_credentials=vertex_credentials
-        )
-    
-    response_text = response.choices[0].message.content
-    return response_text
 
 def read_sql_query(sql, db):
     conn = sqlite3.connect(db)
@@ -76,27 +45,35 @@ def determine_chart_type(df):
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-def draw_km_plotly(data):    
+
+
+def draw_km_plotly(data):
     survival_data = data['survival_data']
     death_events = data['death_events']
 
-    # Create figure
+    # Load group descriptions
+    group_desc = pd.read_csv("group_description.csv")
+    group_labels = dict(zip(group_desc['Group'], group_desc['Label']))
+
+    # Create figure with increased height
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
     # Add survival lines for each group
     for group in survival_data[list(survival_data.keys())[0]].keys():
         dates = list(survival_data.keys())
         values = [survival_data[date][group] for date in dates]
+        label = group_labels.get(group, group)  # Use the label if available, otherwise use the group name
         fig.add_trace(
-            go.Scatter(x=dates, y=values, name=group, mode='lines'),
+            go.Scatter(x=dates, y=values, name=label, mode='lines'),
             secondary_y=False
         )
 
     # Add death events as scatter points
     for event in death_events:
+        label = group_labels.get(event['group'], event['group'])
         fig.add_trace(
             go.Scatter(x=[event['date']], y=[survival_data[event['date']][event['group']]], 
-                       mode='markers', name=f'Death Event ({event["group"]})',
+                       mode='markers', name=f'Death Event ({label})',
                        marker=dict(color='red', 
                                    size=6, symbol='circle'),
                        showlegend=False),
@@ -109,7 +86,16 @@ def draw_km_plotly(data):
         xaxis_title='Date',
         yaxis_title='Number of Mice Alive',
         legend_title='Group',
-        hovermode='closest'
+        hovermode='closest',
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-0.5,
+            xanchor="center",
+            x=0.5
+        ),
+        height=800,  # Increase the height of the figure
+        margin=dict(b=200),  # Increase bottom margin to accommodate the legend
     )
     fig.update_xaxes(tickangle=45)
 
@@ -127,13 +113,14 @@ def generate_chart(df, chart_type):
     elif chart_type == 'pie':
         fig = px.pie(df, names=df.columns[0], values=df.columns[1],
                      title=f"Distribution of {df.columns[0]}",
-                     template="plotly_white")
+                        template="plotly_white")
     elif chart_type == 'line':
         fig = px.line(df, x=df.columns[0], y=df.columns[1],
                       title=f"{df.columns[1]} Over {df.columns[0]}",
                       template="plotly_white", markers=True)
     elif chart_type == 'kaplan-meier':
-        data = get_survival_data()
+        # data = convert_survival_data(df)
+        data= get_survival_data()
         fig = draw_km_plotly(data)
     else:
         st.write("No suitable chart type determined for this data.")

@@ -4,15 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <title>Plotly Line Chart with Averages and Error Bars</title>
+    <title>Plotly Line Chart with Taller Graph and Reversed Group Sorting</title>
 </head>
 <body>
 
-<h2>Upload CSV and Plot Line Chart for Groups of Animals with Averages and Error Bars</h2>
+<h2>Upload CSV with Data</h2>
 <input type="file" id="csvFileInput" accept=".csv">
 <div id="chart"></div>
 
 <script>
+    // Hardcoded Group Descriptions
+    const labelMap = {
+        "1": "Group 1 (All controls (Control diet + scramble vector + senolytic vehicle + HSC mobilization only))",
+        "2": "Group 2 (Diet only (Rapamycin diet + scramble vector + senolytic vehicle + HSC mobilization only))",
+        "3": "Group 3 (Senolytic only (control diet + scramble vector + navitoclax + HSC mobilization only))",
+        "4": "Group 4 (Telomerase only (control diet + telomerase AAV + senolytic vehicle + HSC mobilization only))",
+        "5": "Group 5 (HSC only (control diet + scramble vector + senolytic vehicle + HSC with mobilization))",
+        "6": "Group 6 (Without Diet (control diet + telomerase AAV + navitoclax + HSC with mobilization))",
+        "7": "Group 7 (Without senolytic (rapamycin diet + telomerase AAV + senolytic vehicle + HSC with mobilization))",
+        "8": "Group 8 (Without telomerase (rapamycin diet + scramble vector + navitoclax + HSC with mobilization))",
+        "9": "Group 9 (Without HSC (rapamycin diet + telomerase AAV + navitoclax + mobilization only))",
+        "10": "Group 10 (All treatments (rapamycin diet + telomerase AAV + navitoclax + HSC with mobilization))"
+    };
+
+    // Higher contrast color palette
+    const highContrastColors = [
+        '#e6194b', '#3cb44b', '#ffe119', '#0082c8', '#f58231',
+        '#911eb4', '#46f0f0', '#f032e6', '#d2f53c', '#fabebe',
+        '#008080', '#e6beff', '#aa6e28', '#800000', '#aaffc3'
+    ];
+
+    // Read and process the data CSV file
     document.getElementById('csvFileInput').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -33,12 +55,14 @@
 
         const groups = {};
 
-        // Process the CSV data row by row
+        // Process the CSV data row by row, drop rows with missing/zero "Value"
         rows.forEach(row => {
-            const earTag = row[headers.indexOf("EarTag")];
+            const value = parseFloat(row[headers.indexOf("Value")]);
+            if (!value || value === 0) return;  // Skip if value is missing or zero
+
             const groupNumber = row[headers.indexOf("Group_Number")];
             const daysSinceBirth = parseInt(row[headers.indexOf("DaysSinceBirth")]);
-            const value = parseFloat(row[headers.indexOf("Value")]);
+            const earTag = row[headers.indexOf("EarTag")];
 
             // Initialize group if not already present
             if (!groups[groupNumber]) {
@@ -90,7 +114,7 @@
             return groupedData;
         }
 
-        // Function to compute mean and standard deviation
+        // Function to compute mean and symmetrical error bars
         function computeStats(data) {
             const stats = {};
             data.forEach(row => {
@@ -101,15 +125,15 @@
                 stats[time].values.push(row.value);
             });
 
-            const result = { times: [], means: [], stdDevs: [] };
+            const result = { times: [], means: [], errors: [] };  // "errors" will be symmetrical
             Object.keys(stats).forEach(time => {
                 const values = stats[time].values;
                 const mean = values.reduce((a, b) => a + b, 0) / values.length;
                 const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
-                const stdDev = Math.sqrt(variance);
+                const stdDev = Math.sqrt(variance);  // Symmetrical error bars (standard deviation)
                 result.times.push(parseInt(time));
                 result.means.push(mean);
-                result.stdDevs.push(stdDev);
+                result.errors.push(stdDev);  // Same distance for upper and lower error bars
             });
 
             return result;
@@ -117,33 +141,70 @@
 
         // Prepare Plotly traces
         const traces = [];
+        let colorIndex = 0;  // To assign different colors to each group
 
-        Object.keys(groups).forEach(groupNumber => {
+        // Sort groups numerically and in reverse order
+        const sortedGroupKeys = Object.keys(groups).sort((a, b) => parseInt(b) - parseInt(a));
+
+        sortedGroupKeys.forEach(groupNumber => {
             const groupData = assignPseudoTime(groups[groupNumber]);
             const stats = computeStats(groupData);  // Compute stats
 
+            const upperBound = stats.means.map((mean, i) => mean + stats.errors[i]);
+            const lowerBound = stats.means.map((mean, i) => mean - stats.errors[i]);
+
+            const fillColor = highContrastColors[colorIndex % highContrastColors.length];  // Select color for the group
+
+            // Main line trace (mean) with error bars
+            const groupLabel = labelMap[groupNumber] || `Group ${groupNumber}`;  // Use custom label if available
             traces.push({
                 x: stats.times,
                 y: stats.means,
-                mode: 'lines+markers',
-                name: `Group ${groupNumber}`,
+                mode: 'lines+markers',  // Show both lines and markers
+                line: { color: fillColor, width: 2 },  // Line color and width
+                marker: { color: fillColor },  // Marker color to match the line
                 error_y: {
                     type: 'data',
-                    array: stats.stdDevs,  // Standard deviation for error bars
+                    array: stats.errors,
                     visible: true
-                }
+                },
+                name: groupLabel  // Use custom label
             });
+
+            colorIndex++;  // Move to the next color
         });
 
         const layout = {
-            title: 'Measurement Over Time by Group with Averages and Error Bars',
-            xaxis: { title: 'Pseudo Time (Days)' },
+            title: 'Measurement Over Time by Group',
+            height: 800,  // Make the graph taller
+            xaxis: { 
+                title: 'Time (days since birth)',  // X-axis title updated
+                tickmode: 'linear',
+                tick0: 0,
+                dtick: 10,  // Minor tick marks every 10 days
+                showgrid: true
+            },
             yaxis: { title: 'Measurement (N)' },
-            legend: { title: { text: 'Groups' } }
+            legend: { 
+                title: { text: 'Groups' },
+                orientation: 'h',  // Horizontal legend
+                x: 0.5,  // Center the legend horizontally
+                y: -0.6,  // Place the legend even lower to avoid overlapping the graph
+                xanchor: 'center'  // Align the legend center
+            }
         };
 
         // Plot the graph
         Plotly.newPlot('chart', traces, layout);
+    }
+
+    // Helper function to convert hex color to RGB
+    function hexToRGB(hex) {
+        const bigint = parseInt(hex.slice(1), 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `${r},${g},${b}`;
     }
 </script>
 

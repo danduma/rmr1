@@ -6,52 +6,57 @@ import matplotlib.pyplot as plt
 import sqlite3
 
 
-def get_survival_data(start_date='11/03/23', end_date='10/03/24'):
-    conn = sqlite3.connect('mouse_study.db')
-    cursor = conn.cursor()
+start_date = '2023-11-03'
+end_date = '2024-10-03'
 
-    # Convert dates to SQLite format
-    start_date = datetime.strptime(start_date, '%m/%d/%y').strftime('%Y-%m-%d')
-    end_date = datetime.strptime(end_date, '%m/%d/%y').strftime('%Y-%m-%d')
-
-    # Get all mice and their death dates
-    cursor.execute('''
-    SELECT m.EarTag, m.DOD, g.Number as Group_Number
-    FROM MouseData m
-    JOIN "Group" g ON m.Group_Number = g.Number
-    WHERE m.DOB <= ? AND (m.DOD IS NULL OR m.DOD <= ?)
-    ''', (start_date, end_date))
-
-    mice_data = cursor.fetchall()
-
+def convert_survival_data(df, start_date=start_date, end_date=end_date):
     # Initialize data structure
     survival_data = {}
     death_events = []
 
     # Process data
-    current_date = datetime.strptime(start_date, '%Y-%m-%d')
-    end_date = datetime.strptime(end_date, '%Y-%m-%d')
+    current_date = pd.to_datetime(start_date)
+    end_date = pd.to_datetime(end_date)
 
     while current_date <= end_date:
         date_str = current_date.strftime('%Y-%m-%d')
         survival_data[date_str] = {}
 
-        for group in set(mouse[2] for mouse in mice_data):
-            alive_count = sum(1 for mouse in mice_data if mouse[2] == group and (mouse[1] is None or datetime.strptime(mouse[1], '%Y-%m-%d') > current_date))
-            survival_data[date_str][f'Group {group}'] = alive_count
+        for group in df['Group'].unique():
+            alive_count = ((df['DOD'].isna()) | (pd.to_datetime(df['DOD']) > current_date)) & (df['Group'] == group)
+            survival_data[date_str][f'Group {group}'] = alive_count.sum()
 
         # Check for deaths on this date
-        for mouse in mice_data:
-            if mouse[1] == date_str:
-                death_events.append({
-                    'date': date_str,
-                    'group': f'Group {mouse[2]}',
-                    'ear_tag': mouse[0]
-                })
+        deaths_today = df[pd.to_datetime(df['DOD']) == current_date]
+        for _, mouse in deaths_today.iterrows():
+            death_events.append({
+                'date': date_str,
+                'group': f"Group {mouse['Group']}",
+                'ear_tag': mouse['EarTag']
+            })
 
-        current_date += timedelta(days=1)
+        current_date += pd.Timedelta(days=1)
+    return survival_data, death_events
 
+def get_survival_data(start_date=start_date, end_date=end_date):
+    conn = sqlite3.connect('mouse_study.db')
+
+    # Convert dates to SQLite format
+    start_date = pd.to_datetime(start_date).strftime('%Y-%m-%d')
+    end_date = pd.to_datetime(end_date).strftime('%Y-%m-%d')
+
+    # Get all mice and their death dates
+    query = '''
+    SELECT m.EarTag, m.DOD, g.Number as "Group"
+    FROM MouseData m
+    JOIN "Group" g ON m.Group_Number = g.Number
+    WHERE m.DOB <= ? AND (m.DOD IS NULL OR m.DOD <= ?)
+    '''
+    
+    df = pd.read_sql_query(query, conn, params=(start_date, end_date))
     conn.close()
+
+    survival_data, death_events = convert_survival_data(df, start_date, end_date)
 
     return {
         'survival_data': survival_data,
