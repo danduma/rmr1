@@ -67,4 +67,4 @@ def call_llm_and_get_results(question):
                     processed_record[key] = value
             results_dict.append(processed_record)
     
-    return results_dict, chart_type
+    return sql, results_dict, chart_type

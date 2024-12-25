@@ -7,7 +7,7 @@ from typing import List, Optional
 import os
 import pandas as pd
 
-from llm_sql import clean_response, determine_chart_type, read_sql_query
+from llm_sql import call_llm_and_get_results, clean_response, determine_chart_type, read_sql_query
 
 import logging
 logger = logging.getLogger(__name__)
@@ -18,6 +18,7 @@ from mouse_data import get_mice_data_from_db
 
 # Initialize storage based on environment
 image_storage = get_image_storage()
+mouse_images = load_mouse_images()
 
 # Templates
 templates = Jinja2Templates(directory="templates")
@@ -97,7 +98,7 @@ async def handle_query(request: Request):
     if not question:
         raise HTTPException(status_code=400, detail="No question provided")
     
-
+    sql, results_dict, chart_type = call_llm_and_get_results(question)
     
     return {
         "sql": sql,
