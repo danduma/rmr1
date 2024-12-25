@@ -76,7 +76,11 @@ from plotly.subplots import make_subplots
 
 
 def draw_km_plotly(data):
-    survival_data = data['survival_data']
+    if 'survival_data' in data:
+        survival_data = data['survival_data']
+    else:
+        survival_data = data
+    
     death_events = data['death_events']
 
     # Read group descriptions

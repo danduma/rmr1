@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timedelta
+import os
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -38,7 +39,17 @@ def convert_survival_data(df, start_date=start_date, end_date=end_date):
         current_date += pd.Timedelta(days=1)
     return survival_data, death_events
 
-def get_survival_data(start_date=start_date, end_date=end_date):
+def get_survival_data(start_date=start_date, end_date=end_date, survival_data_path='data/survival_data.json'):
+    # check if the file exists
+    if os.path.exists(survival_data_path):
+        try:
+            with open(survival_data_path, 'r') as f:
+                survival_data = json.load(f)
+            return survival_data
+        except json.JSONDecodeError:
+            # If JSON loading fails, continue with generating new data
+            pass
+    
     conn = sqlite3.connect('data/mouse_study.db')
 
     # Convert dates to SQLite format
@@ -58,12 +69,19 @@ def get_survival_data(start_date=start_date, end_date=end_date):
 
     survival_data, death_events = convert_survival_data(df, start_date, end_date)
 
+    # Convert numpy types to native Python types before JSON serialization
+    survival_data_serializable = {}
+    for date, groups in survival_data.items():
+        survival_data_serializable[date] = {
+            group: int(count) for group, count in groups.items()
+        }
+
     # Save the data to a JSON file for caching
-    with open('data/survival_data.json', 'w') as f:
-        json.dump(survival_data, f, indent=4)
+    with open(survival_data_path, 'w') as f:
+        json.dump(survival_data_serializable, f, indent=4)
 
     return {
-        'survival_data': survival_data,
+        'survival_data': survival_data_serializable,
         'death_events': death_events
     }
 
@@ -103,6 +121,4 @@ def draw_kaplan_meier_chart(data_json):
     
 if __name__=="__main__":
     survival_data = get_survival_data()
-    with open('survival_data.json', 'w') as f:
-        json.dump(survival_data, f, indent=4)
     draw_kaplan_meier_chart(survival_data)
