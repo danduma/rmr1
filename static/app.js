@@ -377,62 +377,132 @@
             createLineChart(data, container);
         }
     }
+
+    function createKaplanMeierChart(data, container) {
+        // Extract survival data from the response
+        const survivalData = data.survival_data;
+        const deathEvents = data.death_events;
+        
+        const traces = [];
+        const groups = {};
+        
+        // Process survival data into groups
+        Object.entries(survivalData).forEach(([date, groupCounts]) => {
+            Object.entries(groupCounts).forEach(([groupName, count]) => {
+                if (!groups[groupName]) {
+                    groups[groupName] = {
+                        x: [],
+                        y: [],
+                        name: groupName,
+                        mode: 'lines+markers',
+                        line: { shape: 'hv' }
+                    };
+                }
+                groups[groupName].x.push(date);
+                groups[groupName].y.push(count);
+            });
+        });
+
+        // Add traces for each group
+        Object.values(groups).forEach(group => {
+            traces.push(group);
+        });
+
+        // Add death events as scatter points
+        deathEvents.forEach(event => {
+            traces.push({
+                x: [event.date],
+                y: [survivalData[event.date][event.group]],
+                mode: 'markers',
+                marker: {
+                    symbol: 'x',
+                    size: 8,
+                    color: 'red'
+                },
+                showlegend: false,
+                hoverinfo: 'text',
+                hovertext: `Death: ${event.ear_tag}`
+            });
+        });
+
+        const layout = {
+            title: 'Kaplan-Meier Survival Chart',
+            xaxis: {
+                title: 'Date',
+                tickangle: 45
+            },
+            yaxis: {
+                title: 'Number of Mice Alive'
+            },
+            hovermode: 'closest'
+        };
+
+        Plotly.newPlot(container, traces, layout);
+    }
+
+    function createBarChart(data, container) {
+        const x = data.map(row => Object.values(row)[0]);
+        const y = data.map(row => Object.values(row)[1]);
+
+        const trace = {
+            x: x,
+            y: y,
+            type: 'bar'
+        };
+
+        const layout = {
+            title: 'Bar Chart',
+            xaxis: {
+                title: Object.keys(data[0])[0],
+                tickangle: 45
+            },
+            yaxis: {
+                title: Object.keys(data[0])[1]
+            }
+        };
+
+        Plotly.newPlot(container, [trace], layout);
+    }
+
+    function createPieChart(data, container) {
+        const values = data.map(row => Object.values(row)[1]);
+        const labels = data.map(row => Object.values(row)[0]);
+
+        const trace = {
+            values: values,
+            labels: labels,
+            type: 'pie'
+        };
+
+        const layout = {
+            title: 'Pie Chart'
+        };
+
+        Plotly.newPlot(container, [trace], layout);
+    }
+
+    function createLineChart(data, container) {
+        const x = data.map(row => Object.values(row)[0]);
+        const y = data.map(row => Object.values(row)[1]);
+
+        const trace = {
+            x: x,
+            y: y,
+            type: 'scatter',
+            mode: 'lines+markers'
+        };
+
+        const layout = {
+            title: 'Line Chart',
+            xaxis: {
+                title: Object.keys(data[0])[0],
+                tickangle: 45
+            },
+            yaxis: {
+                title: Object.keys(data[0])[1]
+            }
+        };
+
+        Plotly.newPlot(container, [trace], layout);
+    }
 })();
-// $(document).ready(function() {
-//     // Load mice data when the page loads
-//     loadMiceData();
-
-//     // Handle navigation
-//     $('.nav-link').on('click', function(e) {
-//         e.preventDefault();
-//         const page = $(this).data('page');
-//         loadPage(page);
-//         $('.nav-link').removeClass('active');
-//         $(this).addClass('active');
-//     });
-// });
-
-// function loadMousePictures(earTag) {
-//     if (!earTag) {
-//         console.error('Error: No ear tag provided to loadMousePictures');
-//         return;
-//     }
-
-//     // Clear existing pictures
-//     $('#mouse-pictures').empty();
-    
-//     // Update selected mouse name
-//     $('#selected-mouse-name').text('Selected Mouse: ' + earTag);
-    
-//     // Fetch pictures for the selected mouse
-//     $.ajax({
-//         url: '/api/mouse-pictures/' + earTag,
-//         method: 'GET',
-//         success: function(data) {
-//             console.log("Received data:", data);  // Log the received data
-//             if (data.pictures && data.pictures.length > 0) {
-//                 data.pictures.forEach(function(picData) {
-//                     console.log("Processing picture data:", picData);  // Log each picture data
-//                     if (picData.file_path) {
-//                         const imgSrc = `/mouse-images/${picData.file_path}`;
-//                         console.log("Image source:", imgSrc);  // Log the constructed image source
-//                         $('#mouse-pictures').append(`
-//                             <div class="col-md-6 mb-3">
-//                                 <img src="${imgSrc}" class="img-fluid rounded" alt="${picData.full_text || 'Mouse picture'}">
-//                                 <p class="mt-2">${picData.date || ''}</p>
-//                             </div>
-//                         `);
-//                     } else {
-//                         console.error('Invalid picture data:', picData);
-//                     }
-//                 });
-//             } else {
-//                 $('#mouse-pictures').append('<p>No pictures available for this mouse.</p>');
-//             }
-//         },
-//         error: function(error) {
-//             console.error('Error loading mouse pictures:', error);
-//             $('#mouse-pictures').append('<p>Error loading pictures. Please try again.</p>');
-//         }
-//     });
-// }
