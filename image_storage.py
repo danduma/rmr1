@@ -29,12 +29,13 @@ class LocalImageStorage(ImageStorage):
         return open(full_path, 'rb'), content_type
 
 class GCSImageStorage(ImageStorage):
-    def __init__(self, bucket_name: str):
+    def __init__(self, bucket_name: str, base_path: str):
         self.client = storage.Client()
         self.bucket = self.client.bucket(bucket_name)
+        self.base_path = base_path
     
     def get_image(self, path: str) -> tuple[BinaryIO, str]:
-        blob = self.bucket.blob(path)
+        blob = self.bucket.blob(os.path.join(self.base_path, path))
         if not blob.exists():
             raise FileNotFoundError(f"Image not found in GCS: {path}")
         
@@ -49,9 +50,9 @@ class GCSImageStorage(ImageStorage):
 def get_image_storage():
     """Factory function to create the appropriate image storage instance"""
     if os.getenv('USE_GCS', '').lower() == 'true':
-        return GCSImageStorage(os.getenv('GCS_BUCKET_NAME'))
+        return GCSImageStorage(os.getenv('GCS_BUCKET_NAME'), os.getenv('GCS_BASE_PATH'))
     else:
-        return LocalImageStorage("/Users/masterman/Downloads/LEVF/Whole body pictures")
+        return LocalImageStorage(os.getenv('LOCAL_BASE_PATH'))
 
 def load_mouse_images():
     """Load and process mouse images from CSV"""
