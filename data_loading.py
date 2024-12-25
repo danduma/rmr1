@@ -213,7 +213,8 @@ if __name__ == '__main__':
     # death_data_file_path = '/path/to/your/death_data.xlsx'
     # load_death_data(death_data_file_path)
 
-    root_directory = '/Users/masterman/Downloads/LEVF/Whole body pictures'
-    mouse_images = index_mouse_images(root_directory)
-    with open('mouse_images.json', 'w') as f:
-        json.dump(mouse_images, f)
+    # root_directory = '/Users/masterman/Downloads/LEVF/Whole body pictures'
+    # mouse_images = index_mouse_images(root_directory)
+    # with open('mouse_images.json', 'w') as f:
+    #     json.dump(mouse_images, f)
+    pass

@@ -8,6 +8,7 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QImage, QKeySequence, QShortcut, QNativeGestureEvent
 import os
 
+ROOT_IMAGE_DIR = '/Users/masterman/Downloads/LEVF/Whole body pictures'
 
 def tag_has_error(row):
     # Check ear tag condition
@@ -286,7 +287,7 @@ class ImageEditor(QMainWindow):
         
         # Load and display image
         image_path = row['file_path']
-        full_path = os.path.join('/Users/masterman/Downloads/LEVF/Whole body pictures', image_path)
+        full_path = os.path.join(ROOT_IMAGE_DIR, image_path)
         
         if os.path.exists(full_path):
             pixmap = QPixmap(full_path)

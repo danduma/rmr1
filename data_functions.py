@@ -6,7 +6,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import sqlite3
 
-
 start_date = '2023-11-03'
 end_date = '2024-10-03'
 

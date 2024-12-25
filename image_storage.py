@@ -54,10 +54,10 @@ def get_image_storage():
     else:
         return LocalImageStorage(os.getenv('LOCAL_BASE_PATH'))
 
-def load_mouse_images():
+def load_mouse_images(image_csv_path='data/image_results.csv'):
     """Load and process mouse images from CSV"""
     # Read the CSV file with ear_tag as nullable integer type
-    df = pd.read_csv('data/ocr/image_results.csv', dtype={'ear_tag': 'Int64'})
+    df = pd.read_csv(image_csv_path, dtype={'ear_tag': 'Int64'})
     
     # Drop NA values before grouping
     df = df.dropna(subset=['ear_tag'])
