@@ -1,17 +1,27 @@
 from litellm import completion
-import os
-import json
+from dotenv import load_dotenv
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-default_location = os.path.join(current_dir, "vertexai-api-key.json")  
-file_path = os.environ.get("VERTEXAI_API_KEY_PATH", default_location)
+# Load environment variables from .env file
+load_dotenv()
 
-
-with open(file_path, 'r') as file:
-    vertex_credentials = json.load(file)
-    
-os.environ["VERTEXAI_PROJECT"] = os.environ.get("VERTEXAI_PROJECT", "cognivita")
-os.environ["VERTEXAI_LOCATION"] = os.environ.get("VERTEXAI_LOCATION", "us-central1")
+safety_settings = [
+{
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE",
+        },
+]
 
 def get_llm_response(question, prompt):
     
@@ -21,10 +31,10 @@ def get_llm_response(question, prompt):
     ]
     
     response = completion( 
-        model='vertex_ai/gemini-1.5-pro-002',
+        model='gemini/gemini-2.0-flash-exp',
         messages=messages,
         stream=False,
-        vertex_credentials=vertex_credentials
+        safety_settings=safety_settings
         )
     
     response_text = response.choices[0].message.content

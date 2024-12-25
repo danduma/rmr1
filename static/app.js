@@ -4,38 +4,21 @@
         const navLinks = document.querySelectorAll('.nav-link');
 
         async function loadPage(page) {
-            content.innerHTML = '';
             switch (page) {
                 case 'dashboard':
+                    $('#mice-content').hide();
+                    $('#content').show();
                     content.innerHTML = '<h1>Dashboard</h1><canvas id="kaplanMeierChart"></canvas>';
                     initDashboard();
                     break;
                 case 'mice':
-                    content.innerHTML = `
-                        <h1>Mice</h1>
-                        <div id="debug"></div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-striped table-hover" id="miceTable">
-                                    <thead>
-                                        <tr>
-                                            <th data-sort="EarTag">Ear Tag</th>
-                                            <th data-sort="Sex">Sex</th>
-                                            <th data-sort="DOB">Date of Birth</th>
-                                            <th data-sort="DOD">Date of Death</th>
-                                            <th data-sort="Group_Number">Group Number</th>
-                                            <th data-sort="PictureCount">Number of Pictures</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    `;
+                    $('#content').hide();
+                    $('#mice-content').show();
                     initMice();
                     break;
                 case 'query':
+                    $('#mice-content').hide();
+                    $('#content').show();
                     content.innerHTML = '<h1>Query</h1><p>This is the query page. Add your query interface here.</p>';
                     initQuery();
                     break;
@@ -52,8 +35,10 @@
             });
         });
 
-        // Load dashboard by default
-        loadPage('dashboard');
+        // Load mice by default
+        $('#content').hide();
+        $('#mice-content').show();
+        initMice();
     });
 
     function initDashboard() {
@@ -98,7 +83,7 @@
         const rowsPerPage = 20;
         let allMiceData = [];
 
-        function loadMiceData(sortColumn, sortOrder = 'asc') {
+        function loadMiceData(currentPage=1, sortColumn=null, sortOrder = 'asc') {
             var url = '/api/mice';
             if (sortColumn) {
                 url += `?sort=${sortColumn}-${sortOrder}`;
@@ -184,7 +169,7 @@
             var newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
             
             $(this).data('order', newOrder);
-            loadMiceData(column, newOrder);
+            loadMiceData(currentPage, column, newOrder);
             
             // Update sort indicators
             $('#miceTable th').removeClass('sort-asc sort-desc');
@@ -229,22 +214,47 @@
             url: '/api/mouse-pictures/' + earTag,
             method: 'GET',
             success: function(data) {
-                console.log("Received data:", data);  // Log the received data
+                console.log("Received data:", data);
                 if (data.pictures && data.pictures.length > 0) {
+                    // Group pictures by date
+                    const picturesByDate = {};
+                    
                     data.pictures.forEach(function(picData) {
-                        console.log("Processing picture data:", picData);  // Log each picture data
-                        if (picData.img_path) {
-                            const imgSrc = `/mouse-images/${picData.img_path}`;
-                            console.log("Image source:", imgSrc);  // Log the constructed image source
-                            $('#mouse-pictures').append(`
+                        if (picData.file_path && picData.date) {
+                            if (!picturesByDate[picData.date]) {
+                                picturesByDate[picData.date] = [];
+                            }
+                            picturesByDate[picData.date].push(picData);
+                        }
+                    });
+
+                    // Sort dates in ascending order
+                    const sortedDates = Object.keys(picturesByDate).sort();
+
+                    // Create a container for each date
+                    sortedDates.forEach(function(date) {
+                        const dateContainer = $('<div class="date-group mb-4"></div>');
+                        
+                        // Add date header
+                        dateContainer.append(`<h3 class="text-muted mb-3">${date}</h3>`);
+                        
+                        // Add pictures for this date
+                        const picturesRow = $('<div class="row"></div>');
+                        
+                        picturesByDate[date].forEach(function(picData) {
+                            const imgSrc = `/mouse-images/${picData.file_path}`;
+                            picturesRow.append(`
                                 <div class="col-md-6 mb-3">
-                                    <img src="${imgSrc}" class="img-fluid rounded" alt="${picData.img_desc || 'Mouse picture'}">
-                                    <p class="mt-2">${picData.img_desc || ''}</p>
+                                    <img src="${imgSrc}" 
+                                         class="img-fluid rounded" 
+                                         title="${picData.full_text || ''}">
+                                    <p class="mt-2">${picData.file_path || ''}</p>
                                 </div>
                             `);
-                        } else {
-                            console.error('Invalid picture data:', picData);
-                        }
+                        });
+                        
+                        dateContainer.append(picturesRow);
+                        $('#mouse-pictures').append(dateContainer);
                     });
                 } else {
                     $('#mouse-pictures').append('<p>No pictures available for this mouse.</p>');
@@ -258,94 +268,171 @@
     }
 
     function initQuery() {
-        // Add query page specific functionality here
+        const content = document.getElementById('content');
+        
+        // Create query interface
+        content.innerHTML = `
+            <div class="container mt-4">
+                <h1>SQL Query Interface</h1>
+                <div class="row mb-4">
+                    <div class="col">
+                        <div class="input-group">
+                            <input type="text" id="question-input" class="form-control" 
+                                   placeholder="Enter your question..." 
+                                   value="show me survival by group">
+                            <button class="btn btn-primary" id="run-query">Run</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Query Results</h3>
+                        <pre id="sql-query" class="bg-light p-3"></pre>
+                        <div id="results-table"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Visualization</h3>
+                        <div id="chart-container"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add event listener for the Run button
+        document.getElementById('run-query').addEventListener('click', async () => {
+            const question = document.getElementById('question-input').value;
+            
+            try {
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question })
+                });
+                
+                const data = await response.json();
+                
+                // Display SQL query
+                document.getElementById('sql-query').textContent = data.sql;
+                
+                // Display results in table
+                const resultsTable = document.getElementById('results-table');
+                if (data.results.length > 0) {
+                    const table = createDataTable(data.results);
+                    resultsTable.innerHTML = '';
+                    resultsTable.appendChild(table);
+                }
+                
+                // Create visualization
+                const chartContainer = document.getElementById('chart-container');
+                createVisualization(data.results, data.chart_type, chartContainer);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function createDataTable(data) {
+        const table = document.createElement('table');
+        table.className = 'table table-striped';
+        
+        // Create header
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        Object.keys(data[0]).forEach(key => {
+            const th = document.createElement('th');
+            th.textContent = key;
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        
+        // Create body
+        const tbody = document.createElement('tbody');
+        data.forEach(row => {
+            const tr = document.createElement('tr');
+            Object.values(row).forEach(value => {
+                const td = document.createElement('td');
+                td.textContent = value;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        
+        return table;
+    }
+
+    function createVisualization(data, chartType, container) {
+        container.innerHTML = '';
+        
+        if (chartType === 'kaplan-meier') {
+            createKaplanMeierChart(data, container);
+        } else if (chartType === 'bar') {
+            createBarChart(data, container);
+        } else if (chartType === 'pie') {
+            createPieChart(data, container);
+        } else if (chartType === 'line') {
+            createLineChart(data, container);
+        }
     }
 })();
+// $(document).ready(function() {
+//     // Load mice data when the page loads
+//     loadMiceData();
 
-$(document).ready(function() {
-    // Load mice data when the page loads
-    loadMiceData();
+//     // Handle navigation
+//     $('.nav-link').on('click', function(e) {
+//         e.preventDefault();
+//         const page = $(this).data('page');
+//         loadPage(page);
+//         $('.nav-link').removeClass('active');
+//         $(this).addClass('active');
+//     });
+// });
 
-    // Handle navigation
-    $('.nav-link').on('click', function(e) {
-        e.preventDefault();
-        const page = $(this).data('page');
-        if (page === 'mice') {
-            $('#content').hide();
-            $('#mice-content').show();
-        } else {
-            $('#mice-content').hide();
-            $('#content').show();
-            loadPage(page);
-        }
-    });
-});
+// function loadMousePictures(earTag) {
+//     if (!earTag) {
+//         console.error('Error: No ear tag provided to loadMousePictures');
+//         return;
+//     }
 
-function loadMiceData() {
-    $.ajax({
-        url: '/api/mice',
-        method: 'GET',
-        success: function(data) {
-            const miceList = $('#mice-list');
-            miceList.empty();
-            data.forEach(function(mouse) {
-                miceList.append(`
-                    <tr class="mouse-item" data-ear-tag="${mouse.EarTag}">
-                        <td>${mouse.EarTag}</td>
-                        <td>${mouse.Sex}</td>
-                        <td>${mouse.DOB}</td>
-                        <!-- Add more cells as needed -->
-                    </tr>
-                `);
-            });
-        },
-        error: function(error) {
-            console.error('Error loading mice data:', error);
-        }
-    });
-}
-
-function loadMousePictures(earTag) {
-    if (!earTag) {
-        console.error('Error: No ear tag provided to loadMousePictures');
-        return;
-    }
-
-    // Clear existing pictures
-    $('#mouse-pictures').empty();
+//     // Clear existing pictures
+//     $('#mouse-pictures').empty();
     
-    // Update selected mouse name
-    $('#selected-mouse-name').text('Selected Mouse: ' + earTag);
+//     // Update selected mouse name
+//     $('#selected-mouse-name').text('Selected Mouse: ' + earTag);
     
-    // Fetch pictures for the selected mouse
-    $.ajax({
-        url: '/api/mouse-pictures/' + earTag,
-        method: 'GET',
-        success: function(data) {
-            console.log("Received data:", data);  // Log the received data
-            if (data.pictures && data.pictures.length > 0) {
-                data.pictures.forEach(function(picData) {
-                    console.log("Processing picture data:", picData);  // Log each picture data
-                    if (picData.img_path) {
-                        const imgSrc = `/mouse-images/${picData.img_path}`;
-                        console.log("Image source:", imgSrc);  // Log the constructed image source
-                        $('#mouse-pictures').append(`
-                            <div class="col-md-6 mb-3">
-                                <img src="${imgSrc}" class="img-fluid rounded" alt="${picData.img_desc || 'Mouse picture'}">
-                                <p class="mt-2">${picData.img_desc || ''}</p>
-                            </div>
-                        `);
-                    } else {
-                        console.error('Invalid picture data:', picData);
-                    }
-                });
-            } else {
-                $('#mouse-pictures').append('<p>No pictures available for this mouse.</p>');
-            }
-        },
-        error: function(error) {
-            console.error('Error loading mouse pictures:', error);
-            $('#mouse-pictures').append('<p>Error loading pictures. Please try again.</p>');
-        }
-    });
-}
+//     // Fetch pictures for the selected mouse
+//     $.ajax({
+//         url: '/api/mouse-pictures/' + earTag,
+//         method: 'GET',
+//         success: function(data) {
+//             console.log("Received data:", data);  // Log the received data
+//             if (data.pictures && data.pictures.length > 0) {
+//                 data.pictures.forEach(function(picData) {
+//                     console.log("Processing picture data:", picData);  // Log each picture data
+//                     if (picData.file_path) {
+//                         const imgSrc = `/mouse-images/${picData.file_path}`;
+//                         console.log("Image source:", imgSrc);  // Log the constructed image source
+//                         $('#mouse-pictures').append(`
+//                             <div class="col-md-6 mb-3">
+//                                 <img src="${imgSrc}" class="img-fluid rounded" alt="${picData.full_text || 'Mouse picture'}">
+//                                 <p class="mt-2">${picData.date || ''}</p>
+//                             </div>
+//                         `);
+//                     } else {
+//                         console.error('Invalid picture data:', picData);
+//                     }
+//                 });
+//             } else {
+//                 $('#mouse-pictures').append('<p>No pictures available for this mouse.</p>');
+//             }
+//         },
+//         error: function(error) {
+//             console.error('Error loading mouse pictures:', error);
+//             $('#mouse-pictures').append('<p>Error loading pictures. Please try again.</p>');
+//         }
+//     });
+// }

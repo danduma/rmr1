@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Plotly Line Chart with Averages and Error Bars</title>
+</head>
+<body>
+
+<h2>Upload CSV and Plot Line Chart for Groups of Animals with Averages and Error Bars</h2>
+<input type="file" id="csvFileInput" accept=".csv">
+<div id="chart"></div>
+
+<script>
+    document.getElementById('csvFileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            const csvContent = event.target.result;
+            plotCSVData(csvContent);
+        };
+
+        reader.readAsText(file);
+    });
+
+    function plotCSVData(csvData) {
+        // Parse the CSV file
+        let parsedData = csvData.trim().split('\n').map(row => row.split(','));
+        const headers = parsedData[0];
+        let rows = parsedData.slice(1);
+
+        const groups = {};
+
+        // Process the CSV data row by row
+        rows.forEach(row => {
+            const earTag = row[headers.indexOf("EarTag")];
+            const groupNumber = row[headers.indexOf("Group_Number")];
+            const daysSinceBirth = parseInt(row[headers.indexOf("DaysSinceBirth")]);
+            const value = parseFloat(row[headers.indexOf("Value")]);
+
+            // Initialize group if not already present
+            if (!groups[groupNumber]) {
+                groups[groupNumber] = [];
+            }
+
+            // Add the data for this row into the corresponding group
+            groups[groupNumber].push({
+                earTag,
+                daysSinceBirth,
+                value
+            });
+        });
+
+        // Function to group timepoints within 5 days and assign pseudotime
+        function assignPseudoTime(data) {
+            const sortedData = data.sort((a, b) => a.daysSinceBirth - b.daysSinceBirth);  // Sort by DaysSinceBirth
+            const groupedData = [];
+            let currentGroup = [];
+
+            sortedData.forEach((row, index) => {
+                if (currentGroup.length === 0) {
+                    currentGroup.push(row);
+                } else {
+                    const lastDaysSinceBirth = currentGroup[currentGroup.length - 1].daysSinceBirth;
+                    if (row.daysSinceBirth - lastDaysSinceBirth <= 5) {
+                        currentGroup.push(row);
+                    } else {
+                        // Calculate pseudotime for the current group
+                        const pseudoTime = Math.round(
+                            (currentGroup[0].daysSinceBirth + currentGroup[currentGroup.length - 1].daysSinceBirth) / 2
+                        );
+                        currentGroup.forEach(r => r.pseudotime = pseudoTime);  // Assign pseudotime
+                        groupedData.push(...currentGroup);  // Add grouped data
+                        currentGroup = [row];  // Start a new group
+                    }
+                }
+
+                // If it's the last element, finalize the group
+                if (index === sortedData.length - 1) {
+                    const pseudoTime = Math.round(
+                        (currentGroup[0].daysSinceBirth + currentGroup[currentGroup.length - 1].daysSinceBirth) / 2
+                    );
+                    currentGroup.forEach(r => r.pseudotime = pseudoTime);
+                    groupedData.push(...currentGroup);
+                }
+            });
+
+            return groupedData;
+        }
+
+        // Function to compute mean and standard deviation
+        function computeStats(data) {
+            const stats = {};
+            data.forEach(row => {
+                const time = row.pseudotime || row.daysSinceBirth;
+                if (!stats[time]) {
+                    stats[time] = { values: [] };
+                }
+                stats[time].values.push(row.value);
+            });
+
+            const result = { times: [], means: [], stdDevs: [] };
+            Object.keys(stats).forEach(time => {
+                const values = stats[time].values;
+                const mean = values.reduce((a, b) => a + b, 0) / values.length;
+                const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
+                const stdDev = Math.sqrt(variance);
+                result.times.push(parseInt(time));
+                result.means.push(mean);
+                result.stdDevs.push(stdDev);
+            });
+
+            return result;
+        }
+
+        // Prepare Plotly traces
+        const traces = [];
+
+        Object.keys(groups).forEach(groupNumber => {
+            const groupData = assignPseudoTime(groups[groupNumber]);
+            const stats = computeStats(groupData);  // Compute stats
+
+            traces.push({
+                x: stats.times,
+                y: stats.means,
+                mode: 'lines+markers',
+                name: `Group ${groupNumber}`,
+                error_y: {
+                    type: 'data',
+                    array: stats.stdDevs,  // Standard deviation for error bars
+                    visible: true
+                }
+            });
+        });
+
+        const layout = {
+            title: 'Measurement Over Time by Group with Averages and Error Bars',
+            xaxis: { title: 'Pseudo Time (Days)' },
+            yaxis: { title: 'Measurement (N)' },
+            legend: { title: { text: 'Groups' } }
+        };
+
+        // Plot the graph
+        Plotly.newPlot('chart', traces, layout);
+    }
+</script>
+
+</body>
+</html>

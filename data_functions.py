@@ -39,7 +39,7 @@ def convert_survival_data(df, start_date=start_date, end_date=end_date):
     return survival_data, death_events
 
 def get_survival_data(start_date=start_date, end_date=end_date):
-    conn = sqlite3.connect('mouse_study.db')
+    conn = sqlite3.connect('data/mouse_study.db')
 
     # Convert dates to SQLite format
     start_date = pd.to_datetime(start_date).strftime('%Y-%m-%d')
@@ -57,6 +57,10 @@ def get_survival_data(start_date=start_date, end_date=end_date):
     conn.close()
 
     survival_data, death_events = convert_survival_data(df, start_date, end_date)
+
+    # Save the data to a JSON file for caching
+    with open('data/survival_data.json', 'w') as f:
+        json.dump(survival_data, f, indent=4)
 
     return {
         'survival_data': survival_data,

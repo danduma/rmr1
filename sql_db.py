@@ -1,4 +1,32 @@
+import logging
+import warnings
+
+warnings.filterwarnings('ignore', message='.*ScriptRunContext.*')
+
 import streamlit as st
+
+# Configure logging before any other imports
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
+
+# Specifically target and silence the streamlit logger
+streamlit_logger = logging.getLogger('streamlit')
+streamlit_logger.setLevel(logging.CRITICAL)
+streamlit_logger.propagate = False
+
+# Disable the specific warning about ScriptRunContext
+logging.getLogger('streamlit').setLevel(logging.ERROR)
+
+class ScriptRunContextFilter(logging.Filter):
+    def filter(self, record):
+        return 'missing ScriptRunContext' not in record.getMessage()
+
+# Add the filter to the root logger
+logging.getLogger().addFilter(ScriptRunContextFilter())
+
 # import google.generativeai as genai
 import sqlite3
 import pandas as pd
@@ -51,8 +79,8 @@ def draw_km_plotly(data):
     survival_data = data['survival_data']
     death_events = data['death_events']
 
-    # Load group descriptions
-    group_desc = pd.read_csv("group_description.csv")
+    # Read group descriptions
+    group_desc = pd.read_csv("data/group_description.csv")
     group_labels = dict(zip(group_desc['Group'], group_desc['Label']))
 
     # Create figure with increased height
@@ -168,7 +196,7 @@ with st.container():
             submit = st.form_submit_button("Run", help="Click to submit your question.", use_container_width=True)
 
 prompt = open("prompt.txt", "r").read()
-database_path = "mouse_study.db"
+database_path = "data/mouse_study.db"
 
 if submit or question:  # This will trigger on button click or when Enter is pressed
     response = get_llm_response(question, prompt)

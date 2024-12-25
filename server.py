@@ -1,36 +1,33 @@
-from fastapi import FastAPI, Request, Query, HTTPException
+import os
+
+from fastapi import FastAPI, Request, Query, HTTPException, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 from typing import List, Optional
 import json
 from datetime import date
 import sqlite3
-import logging
 import os
+import pandas as pd
+from data_functions import get_survival_data
+from llm import get_llm_response
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
+from sql_db import clean_response, determine_chart_type, read_sql_query
+
+import logging
 logger = logging.getLogger(__name__)
-
 app = FastAPI()
 
-def load_mouse_images():
-    with open('mouse_images.json', 'r') as f:
-        return json.load(f)
+from image_storage import get_image_storage, load_mouse_images, get_images_for_mouse
+from mouse_data import get_mice_data_from_db
 
-def get_images_for_mouse(ear_tag, mouse_images):
-    return mouse_images.get(str(ear_tag), [])
+# Initialize storage based on environment
+image_storage = get_image_storage()
 
-# Usage
-mouse_images = load_mouse_images()
-selected_ear_tag = 5003
-images = get_images_for_mouse(selected_ear_tag, mouse_images)
-
-
-# Update the path to your images
-IMAGES_DIR = "/Users/masterman/Downloads/LEVF/Whole body pictures"
+# Templates
+templates = Jinja2Templates(directory="templates")
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -38,72 +35,15 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Add this new route to serve mouse images
 @app.get("/mouse-images/{path:path}")
 async def get_mouse_image(path: str):
-    full_path = os.path.join(IMAGES_DIR, path)
-    logger.debug(f"Requested image path: {full_path}")
-    if os.path.isfile(full_path):
-        logger.debug(f"File found: {full_path}")
-        return FileResponse(full_path)
-    logger.error(f"File not found: {full_path}")
-    raise HTTPException(status_code=404, detail="Image not found")
-
-# Templates
-templates = Jinja2Templates(directory="templates")
-
-# Mock data (replace with your actual data source)
-class MouseData(BaseModel):
-    EarTag: int
-    Sex: str
-    DOB: date
-    DOD: Optional[date] = None
-    DeathDetails: Optional[str] = None
-    DeathNotes: Optional[str] = None
-    Necropsy: Optional[bool] = None
-    Stagger: Optional[int] = None
-    Group_Number: Optional[int] = None
-    Cohort_id: Optional[int] = None
-    PictureCount: int
-
-def get_mice_data_from_db(sort_column: str = None, sort_order: str = 'asc'):
-    conn = sqlite3.connect('mouse_study.db')
-    cursor = conn.cursor()
-
-    query = '''
-    SELECT EarTag, Sex, DOB, DOD, DeathDetails, DeathNotes, Necropsy, Stagger, Group_Number, Cohort_id
-    FROM MouseData
-    '''
-
-    if sort_column and sort_column != 'PictureCount':
-        query += f' ORDER BY {sort_column} {sort_order.upper()}'
-
-    cursor.execute(query)
-    rows = cursor.fetchall()
-    conn.close()
-
-    # Load mouse images data
-    with open('mouse_images.json', 'r') as f:
-        mouse_images = json.load(f)
-
-    mice_data = [
-        MouseData(
-            EarTag=row[0],
-            Sex=row[1],
-            DOB=date.fromisoformat(row[2]) if row[2] else None,
-            DOD=date.fromisoformat(row[3]) if row[3] else None,
-            DeathDetails=row[4],
-            DeathNotes=row[5],
-            Necropsy=row[6],
-            Stagger=row[7],
-            Group_Number=row[8],
-            Cohort_id=row[9],
-            PictureCount=len(mouse_images.get(str(row[0]), []))
-        )
-        for row in rows
-    ]
-
-    if sort_column == 'PictureCount':
-        mice_data.sort(key=lambda x: x.PictureCount, reverse=(sort_order == 'desc'))
-
-    return mice_data
+    try:
+        image_data, content_type = image_storage.get_image(path)
+        return Response(content=image_data.read(), media_type=content_type)
+    except FileNotFoundError:
+        logger.error(f"File not found: {path}")
+        raise HTTPException(status_code=404, detail="Image not found")
+    except Exception as e:
+        logger.error(f"Error retrieving image: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error retrieving image")
 
 @app.get("/api/mice")
 async def get_mice(sort: Optional[str] = Query(None)):
@@ -155,6 +95,63 @@ async def get_mouse_pictures(ear_tag: int):
         "pictures": images
     }
 
+# Add new endpoint for handling queries
+@app.post("/api/query")
+async def handle_query(request: Request):
+    data = await request.json()
+    question = data.get('question')
+    
+    if not question:
+        raise HTTPException(status_code=400, detail="No question provided")
+    
+    # Read prompt from file
+    with open("prompt.txt", "r") as f:
+        prompt = f.read()
+    
+    # Get LLM response
+    response = get_llm_response(question, prompt)
+    response = clean_response(response)
+    response_json = json.loads(response)
+    
+    sql = response_json['sql']
+    chart_type = response_json.get('graph')
+    
+    # Execute SQL query
+    database_path = "data/mouse_study.db"
+    
+    # If it's a Kaplan-Meier chart, get survival data
+    if chart_type == 'kaplan-meier':
+        results = get_survival_data()
+        # Convert any numpy types in the survival data
+        results_dict = json.loads(json.dumps(results, default=lambda x: x.item() if hasattr(x, 'item') else x))
+    else:
+        results = read_sql_query(sql, database_path)
+        if not chart_type:
+            chart_type = determine_chart_type(results)
+            
+        # Convert DataFrame to records and handle special types
+        results_dict = []
+        for record in results.to_dict(orient='records'):
+            processed_record = {}
+            for key, value in record.items():
+                if pd.isna(value):
+                    processed_record[key] = None
+                elif isinstance(value, (pd.Timestamp, date)):
+                    processed_record[key] = value.isoformat()
+                elif hasattr(value, 'item'):  # Handle numpy types
+                    processed_record[key] = value.item()
+                else:
+                    processed_record[key] = value
+            results_dict.append(processed_record)
+    
+    return {
+        "sql": sql,
+        "results": results_dict,
+        "chart_type": chart_type
+    }
+
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8111)
