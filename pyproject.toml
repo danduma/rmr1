@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "hackarc"
+name = "rmr1"
 version = "0.1.0"
-description = ""
+description = "RMR1"
 authors = ["Daniel Duma <danielduma@gmail.com>"]
 readme = "README.md"
 
@@ -19,6 +19,7 @@ litellm = "^1.48.12"
 google-auth = "^2.35.0"
 python-dotenv = "^1.0.1"
 google-cloud-storage = "^2.19.0"
+pyqt6 = "^6.8.0"
 
 [build-system]
 requires = ["poetry-core"]
