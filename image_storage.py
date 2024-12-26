@@ -4,6 +4,11 @@ from typing import Union, BinaryIO
 import os
 from io import BytesIO
 import pandas as pd
+from google.oauth2 import service_account
+from google.api_core import exceptions as google_exceptions
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ImageStorage(ABC):
     @abstractmethod
@@ -29,10 +34,39 @@ class LocalImageStorage(ImageStorage):
         return open(full_path, 'rb'), content_type
 
 class GCSImageStorage(ImageStorage):
-    def __init__(self, bucket_name: str, base_path: str):
-        self.client = storage.Client()
-        self.bucket = self.client.bucket(bucket_name)
-        self.base_path = base_path
+    def __init__(self, bucket_name: str, base_path: str, local_fallback_path: str = None):
+        try:
+            # Initialize client
+            credentials = service_account.Credentials.from_service_account_file(
+                'gcs_key2.json'
+            )
+            self.client = storage.Client(credentials=credentials)
+            
+            # Check if bucket exists
+            try:
+                self.bucket = self.client.get_bucket(bucket_name)
+                logger.info(f"Successfully connected to bucket: {bucket_name}")
+                
+                # Optional: List some files to verify access
+                blobs = list(self.bucket.list_blobs(max_results=1))
+                logger.info(f"Successfully listed files in bucket. Found {len(blobs)} files.")
+                
+            except google_exceptions.NotFound:
+                raise ValueError(f"Bucket {bucket_name} does not exist!")
+            except google_exceptions.Forbidden:
+                raise ValueError(f"No access to bucket {bucket_name}. Check permissions!")
+            
+            self.base_path = base_path
+            self.use_gcs = True
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize GCS: {str(e)}")
+            if local_fallback_path:
+                logger.warning("Falling back to local storage")
+                self.local_storage = LocalImageStorage(local_fallback_path)
+                self.use_gcs = False
+            else:
+                raise
     
     def get_image(self, path: str) -> tuple[BinaryIO, str]:
         blob = self.bucket.blob(os.path.join(self.base_path, path))
