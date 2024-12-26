@@ -12,7 +12,7 @@ df = pd.read_csv(os.path.join(script_dir, '../data/image_results.csv'))
 def extract_group(text):
     if pd.isna(text):
         return None
-    match = re.search(r'group\s*(\d)', text, re.IGNORECASE)
+    match = re.search(r'group\s*(\d+)', text, re.IGNORECASE)
     return int(match.group(1)) if match else None
 
 # Function to extract sex
@@ -29,4 +29,4 @@ df['group'] = df['full_text'].apply(extract_group)
 df['sex'] = df['full_text'].apply(extract_sex)
 
 # Save the updated dataframe using path relative to script location
-df.to_csv(os.path.join(script_dir, '..', 'data', 'image_results_processed.csv'), index=False)
+df.to_csv(os.path.join(script_dir, '../data/image_results.csv'), index=False)

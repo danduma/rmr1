@@ -27,9 +27,10 @@ class Mouse(BaseModel):
     
     class Config:
         from_attributes = True
+    
 
-def get_mice_data_from_db(sort_column: str = None, sort_order: str = 'asc', db: Session = Depends(get_db)):
-    try:
+def get_full_mice_data_from_db(sort_column: str = None, sort_order: str = 'asc', db: Session = Depends(get_db)):
+    # try:
         query = db.query(MouseModel)
         
         if sort_column and sort_column != 'PictureCount':
@@ -45,17 +46,17 @@ def get_mice_data_from_db(sort_column: str = None, sort_order: str = 'asc', db: 
         
         mice_data = [
             Mouse(
-                EarTag=mouse.ear_tag,
-                Sex=mouse.sex,
-                DOB=mouse.dob,
-                DOD=mouse.dod,
-                DeathDetails=mouse.death_details,
-                DeathNotes=mouse.death_notes,
-                Necropsy=mouse.necropsy,
-                Stagger=mouse.stagger,
-                Group_Number=mouse.group_number,
-                Cohort_id=mouse.cohort_id,
-                PictureCount=len(mouse_images.get(str(mouse.ear_tag), []))
+                EarTag=mouse.EarTag,
+                Sex=mouse.Sex,
+                DOB=mouse.DOB,
+                DOD=mouse.DOD,
+                DeathDetails=mouse.DeathDetails,
+                DeathNotes=mouse.DeathNotes,
+                Necropsy=mouse.Necropsy,
+                Stagger=mouse.Stagger,
+                Group_Number=mouse.Group_Number,
+                Cohort_id=mouse.Cohort_id,
+                PictureCount=len(mouse_images.get(str(mouse.EarTag), []))
             )
             for mouse in mice
         ]
@@ -65,6 +66,6 @@ def get_mice_data_from_db(sort_column: str = None, sort_order: str = 'asc', db: 
             
         return mice_data
         
-    except Exception as e:
-        logger.error(f"Database error: {e}")
-        raise HTTPException(status_code=500, detail="Database error")
+    # except Exception as e:
+    #     logger.error(f"Database error: {e}")
+    #     raise HTTPException(status_code=500, detail="Database error")
