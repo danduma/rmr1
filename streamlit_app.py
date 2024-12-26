@@ -36,7 +36,7 @@ import json
 from litellm import completion
 from llm import get_llm_response
 
-from data_functions import convert_survival_data, get_survival_data
+from data_processing.data_functions import convert_survival_data, get_survival_data
 
 
 def clean_response(response):

@@ -1,4 +1,4 @@
-from import_spreadsheets import index_mouse_images, load_cohort_data, load_death_data, load_grip_strength_data
+from data_processing.import_spreadsheets import index_mouse_images, load_cohort_data, load_death_data, load_grip_strength_data
 import json
 import os
 from db_functions import create_database

@@ -186,3 +186,4 @@ yarn-error.log*
 *_cache.json
 
 vertexai-api-key.json
+gcs_key*.json
