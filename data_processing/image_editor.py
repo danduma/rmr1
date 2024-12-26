@@ -8,6 +8,8 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QImage, QKeySequence, QShortcut, QNativeGestureEvent
 import os
 from dotenv import load_dotenv
+from database import get_db
+from mouse_data import get_full_mice_data_from_db
 
 load_dotenv()
 
@@ -44,10 +46,41 @@ def date_has_error(row):
             
     return date_error
 
-def needs_review(row):
+def group_sex_dont_match(row, mouse_data):
+    """
+    Check if group or sex in the row differs from database values.
+    Returns True if there's a mismatch, False otherwise.
+    """
+    try:
+        # Find matching mouse by ear tag using dictionary lookup
+        if pd.isna(row['ear_tag']):
+            return False
+            
+        mouse = mouse_data.get(row['ear_tag'])
+        if not mouse:
+            return False
+            
+        # Check group mismatch - use direct attribute access instead of .get()
+        if 'group' in row.index and not pd.isna(row['group']) and mouse.Group_Number is not None:
+            if int(row['group']) != mouse.Group_Number:
+                return True
+                
+        # Check sex mismatch - use direct attribute access instead of .get()
+        if 'sex' in row.index and not pd.isna(row['sex']) and mouse.Sex:
+            if row['sex'][0].upper() != mouse.Sex[0].upper():
+                return True
+                
+        return False
+        
+    except Exception as e:
+        print(f"Error checking group/sex match: {e}")
+        return False
+
+def needs_review(row, mice_data):
     tag_error = tag_has_error(row)
     date_error = date_has_error(row)
-    return tag_error or date_error
+    mismatch_error = group_sex_dont_match(row, mice_data)
+    return tag_error or date_error or mismatch_error
 
 def update_full_text(df, idx):
     """
@@ -81,6 +114,12 @@ class ImageEditor(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Image Editor")
+
+        db = next(get_db())
+        
+        # Get mice data and create an indexed dictionary
+        self.mice_data = get_full_mice_data_from_db(db=db)
+        self.mice_by_tag = {m.EarTag: m for m in self.mice_data}
         
         # Get screen size
         screen = QApplication.primaryScreen().geometry()
@@ -99,7 +138,8 @@ class ImageEditor(QMainWindow):
         self.setMinimumSize(800, 600)
         
         # Load the CSV data
-        self.df = pd.read_csv('image_results.csv', dtype={'ear_tag': 'Int64'})
+        self.csv_path = 'data/image_results.csv'  # Store path as instance variable
+        self.df = pd.read_csv(self.csv_path, dtype={'ear_tag': 'Int64'})
         
         self.df = fix_full_text(self.df)
         
@@ -108,7 +148,7 @@ class ImageEditor(QMainWindow):
         # Apply the filter
         self.rows_to_review = [
             idx for idx in range(len(self.df)) 
-            if needs_review(self.df.iloc[idx])
+            if needs_review(self.df.iloc[idx], self.mice_by_tag)
         ]
         
         print(f"Found {len(self.rows_to_review)} rows needing review out of {len(self.df)} total rows")
@@ -155,21 +195,58 @@ class ImageEditor(QMainWindow):
         form_layout = QVBoxLayout(form_widget)
         form_layout.setContentsMargins(20, 20, 20, 20)
         
+        # Set fixed width for labels to ensure alignment
+        LABEL_WIDTH = 80
+        
         # Create horizontal layout for ear tag
         ear_tag_layout = QHBoxLayout()
-        ear_tag_layout.addWidget(QLabel("Ear Tag:"))
+        ear_tag_label = QLabel("Ear Tag:")
+        ear_tag_label.setFixedWidth(LABEL_WIDTH)
+        ear_tag_layout.addWidget(ear_tag_label)
         self.ear_tag_input = QSpinBox()
         self.ear_tag_input.setRange(4000, 6999)
         self.ear_tag_input.setSpecialValueText("")
         ear_tag_layout.addWidget(self.ear_tag_input)
+        ear_tag_layout.addStretch()  # Add stretch to push content to the left
         form_layout.addLayout(ear_tag_layout)
         
         # Create horizontal layout for date
         date_layout = QHBoxLayout()
-        date_layout.addWidget(QLabel("Date:"))
+        date_label = QLabel("Date:")
+        date_label.setFixedWidth(LABEL_WIDTH)
+        date_layout.addWidget(date_label)
         self.date_input = QLineEdit()
         date_layout.addWidget(self.date_input)
+        date_layout.addStretch()  # Add stretch to push content to the left
         form_layout.addLayout(date_layout)
+        
+        # Create horizontal layout for group
+        group_layout = QHBoxLayout()
+        group_label = QLabel("Group:")
+        group_label.setFixedWidth(LABEL_WIDTH)
+        group_layout.addWidget(group_label)
+        self.group_input = QSpinBox()
+        self.group_input.setRange(0, 99)
+        self.group_input.setSpecialValueText("")
+        group_layout.addWidget(self.group_input)
+        group_layout.addStretch()  # Add stretch to push content to the left
+        form_layout.addLayout(group_layout)
+        
+        # Create horizontal layout for sex
+        sex_layout = QHBoxLayout()
+        sex_label = QLabel("Sex:")
+        sex_label.setFixedWidth(LABEL_WIDTH)
+        sex_layout.addWidget(sex_label)
+        self.sex_input = QLineEdit()
+        sex_layout.addWidget(self.sex_input)
+        sex_layout.addStretch()  # Add stretch to push content to the left
+        form_layout.addLayout(sex_layout)
+        
+        # Add database info label
+        self.db_info_label = QLabel()
+        self.db_info_label.setWordWrap(True)
+        self.db_info_label.setStyleSheet("QLabel { color: #666666; }")
+        form_layout.addWidget(self.db_info_label)
         
         # Add corrupt checkbox
         self.corrupt_checkbox = QCheckBox("Corrupt")
@@ -207,9 +284,12 @@ class ImageEditor(QMainWindow):
         self.prev_button.clicked.connect(self.show_previous)
         self.next_button.clicked.connect(self.show_next)
         self.save_button.clicked.connect(self.save_changes)
+        self.ear_tag_input.valueChanged.connect(self.update_db_info)
         self.ear_tag_input.textChanged.connect(self.update_current_row)
         self.date_input.textChanged.connect(self.update_current_row)
         self.corrupt_checkbox.stateChanged.connect(self.update_current_row)
+        self.group_input.textChanged.connect(self.update_current_row)
+        self.sex_input.textChanged.connect(self.update_current_row)
         
         # Set focus policy for the window and widgets
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -287,6 +367,8 @@ class ImageEditor(QMainWindow):
         self.ear_tag_input.setValue(int(row['ear_tag']) if pd.notna(row['ear_tag']) else 0)
         self.date_input.setText(str(row['date']) if pd.notna(row['date']) else '')
         self.corrupt_checkbox.setChecked(row.get('corrupt', False) if pd.notna(row.get('corrupt')) else False)
+        self.group_input.setValue(int(row['group']) if pd.notna(row.get('group')) else 0)
+        self.sex_input.setText(str(row['sex']) if pd.notna(row.get('sex')) else '')
         
         # Load and display image
         image_path = row['file_path']
@@ -327,6 +409,14 @@ class ImageEditor(QMainWindow):
         )
         self.notification_label.clear()  # Clear any existing notification
 
+        # Update database info
+        ear_tag = row['ear_tag'] if pd.notna(row['ear_tag']) else None
+        if ear_tag and ear_tag in self.mice_by_tag:
+            mouse = self.mice_by_tag[ear_tag]
+            self.db_info_label.setText(f"Database values:\nGroup: {mouse.Group_Number}\nSex: {mouse.Sex}")
+        else:
+            self.db_info_label.setText("No database record found")
+
     def show_previous(self):
         if self.current_index > 0:
             self.current_index -= 1
@@ -343,11 +433,13 @@ class ImageEditor(QMainWindow):
             self.df.at[idx, 'ear_tag'] = self.ear_tag_input.value() or None  # Convert 0 to None
             self.df.at[idx, 'date'] = self.date_input.text()
             self.df.at[idx, 'corrupt'] = self.corrupt_checkbox.isChecked()
+            self.df.at[idx, 'group'] = self.group_input.value() or None  # Convert 0 to None
+            self.df.at[idx, 'sex'] = self.sex_input.text()
             update_full_text(self.df, idx)
 
     def save_changes(self):
         self.update_current_row()
-        self.df.to_csv('image_results.csv', index=False)
+        self.df.to_csv(self.csv_path, index=False)  # Use stored path
         
         # Show temporary success message in notification label
         self.notification_label.setText("✓ Changes saved!")
@@ -367,6 +459,15 @@ class ImageEditor(QMainWindow):
                 event.accept()
                 return
         super().keyPressEvent(event)
+
+    def update_db_info(self):
+        """Update the database info label based on the current ear tag value."""
+        ear_tag = self.ear_tag_input.value() or None
+        if ear_tag and ear_tag in self.mice_by_tag:
+            mouse = self.mice_by_tag[ear_tag]
+            self.db_info_label.setText(f"Database values:\nGroup: {mouse.Group_Number}\nSex: {mouse.Sex}")
+        else:
+            self.db_info_label.setText("No database record found")
 
 def main():
 
