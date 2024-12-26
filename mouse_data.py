@@ -1,15 +1,18 @@
-import sqlite3
 from datetime import date
 from typing import Optional
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from sqlalchemy import desc
 
+from database import get_db
+from models import MouseData as MouseModel
 from image_storage import load_mouse_images
 import logging
 
 logger = logging.getLogger(__name__)
 
-class MouseData(BaseModel):
+class Mouse(BaseModel):
     EarTag: int
     Sex: str
     DOB: date
@@ -21,49 +24,47 @@ class MouseData(BaseModel):
     Group_Number: Optional[int] = None
     Cohort_id: Optional[int] = None
     PictureCount: int
+    
+    class Config:
+        from_attributes = True
 
-def get_mice_data_from_db(sort_column: str = None, sort_order: str = 'asc'):
+def get_mice_data_from_db(sort_column: str = None, sort_order: str = 'asc', db: Session = Depends(get_db)):
     try:
-        conn = sqlite3.connect('data/mouse_study.db')
-        cursor = conn.cursor()
-
-        query = '''
-        SELECT EarTag, Sex, DOB, DOD, DeathDetails, DeathNotes, Necropsy, Stagger, Group_Number, Cohort_id
-        FROM MouseData
-        '''
-
+        query = db.query(MouseModel)
+        
         if sort_column and sort_column != 'PictureCount':
-            query += f' ORDER BY {sort_column} {sort_order.upper()}'
-
-        cursor.execute(query)
-        rows = cursor.fetchall()
-
+            order_column = getattr(MouseModel, sort_column.lower())
+            if sort_order.lower() == 'desc':
+                order_column = desc(order_column)
+            query = query.order_by(order_column)
+            
+        mice = query.all()
+        
         # Load mouse images data
         mouse_images = load_mouse_images()
-
+        
         mice_data = [
-            MouseData(
-                EarTag=row[0],
-                Sex=row[1],
-                DOB=date.fromisoformat(row[2]) if row[2] else None,
-                DOD=date.fromisoformat(row[3]) if row[3] else None,
-                DeathDetails=row[4],
-                DeathNotes=row[5],
-                Necropsy=row[6],
-                Stagger=row[7],
-                Group_Number=row[8],
-                Cohort_id=row[9],
-                PictureCount=len(mouse_images.get(str(row[0]), []))
+            Mouse(
+                EarTag=mouse.ear_tag,
+                Sex=mouse.sex,
+                DOB=mouse.dob,
+                DOD=mouse.dod,
+                DeathDetails=mouse.death_details,
+                DeathNotes=mouse.death_notes,
+                Necropsy=mouse.necropsy,
+                Stagger=mouse.stagger,
+                Group_Number=mouse.group_number,
+                Cohort_id=mouse.cohort_id,
+                PictureCount=len(mouse_images.get(str(mouse.ear_tag), []))
             )
-            for row in rows
+            for mouse in mice
         ]
-
+        
         if sort_column == 'PictureCount':
-            mice_data.sort(key=lambda x: x.PictureCount, reverse=(sort_order == 'desc'))
-
+            mice_data.sort(key=lambda x: x.PictureCount, reverse=(sort_order.lower() == 'desc'))
+            
         return mice_data
-    except sqlite3.Error as e:
+        
+    except Exception as e:
         logger.error(f"Database error: {e}")
         raise HTTPException(status_code=500, detail="Database error")
-    finally:
-        conn.close()
