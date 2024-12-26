@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 from image_storage import get_image_storage, load_mouse_images, get_images_for_mouse
-from mouse_data import get_mice_data_from_db
+from mouse_data import get_full_mice_data_from_db
 
 # Initialize storage based on environment
 image_storage = get_image_storage()
@@ -44,11 +44,11 @@ async def get_mice(sort: Optional[str] = Query(None)):
     if sort:
         column, _, order = sort.partition('-')
         order = 'asc' if order == 'asc' else 'desc'
-        return get_mice_data_from_db(column, order)
-    return get_mice_data_from_db()
+        return get_full_mice_data_from_db(column, order)
+    return get_full_mice_data_from_db()
 
 # Load mice data from the database
-mice_data = get_mice_data_from_db()
+mice_data = get_full_mice_data_from_db()
 
 
 @app.get("/")
