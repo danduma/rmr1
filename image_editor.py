@@ -7,8 +7,11 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QImage, QKeySequence, QShortcut, QNativeGestureEvent
 import os
+from dotenv import load_dotenv
 
-ROOT_IMAGE_DIR = '/Users/masterman/Downloads/LEVF/Whole body pictures'
+load_dotenv()
+
+LOCAL_BASE_PATH = os.getenv('LOCAL_BASE_PATH')
 
 def tag_has_error(row):
     # Check ear tag condition
@@ -287,7 +290,7 @@ class ImageEditor(QMainWindow):
         
         # Load and display image
         image_path = row['file_path']
-        full_path = os.path.join(ROOT_IMAGE_DIR, image_path)
+        full_path = os.path.join(LOCAL_BASE_PATH, image_path)
         
         if os.path.exists(full_path):
             pixmap = QPixmap(full_path)
