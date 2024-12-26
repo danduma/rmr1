@@ -236,7 +236,7 @@
                         const dateContainer = $('<div class="date-group mb-4"></div>');
                         
                         // Add date header
-                        dateContainer.append(`<h3 class="text-muted mb-3">${date}</h3>`);
+                        dateContainer.append(`<h3 class="text-muted mb-3">${formatDate(date)}</h3>`);
                         
                         // Add pictures for this date
                         const picturesRow = $('<div class="row"></div>');
@@ -379,9 +379,19 @@
     }
 
     function createKaplanMeierChart(data, container) {
-        // Extract survival data from the response
-        const survivalData = data.survival_data;
-        const deathEvents = data.death_events;
+        // Add debugging to see what data we're receiving
+        console.log("Received data in createKaplanMeierChart:", data);
+
+        // Check if data is valid
+        if (!data || typeof data !== 'object') {
+            console.error("Invalid data format for Kaplan-Meier chart. Expected object but got:", data);
+            container.innerHTML = '<div class="alert alert-danger">Error: Invalid data format for Kaplan-Meier chart</div>';
+            return;
+        }
+
+        // The data is already in the survival data format
+        const survivalData = data;
+        const deathEvents = []; // We'll handle death events separately if needed
         
         const traces = [];
         const groups = {};
@@ -405,36 +415,32 @@
 
         // Add traces for each group
         Object.values(groups).forEach(group => {
+            // Sort the data points by date
+            const sortedIndices = group.x.map((_, i) => i).sort((a, b) => 
+                new Date(group.x[a]) - new Date(group.x[b])
+            );
+            group.x = sortedIndices.map(i => group.x[i]);
+            group.y = sortedIndices.map(i => group.y[i]);
             traces.push(group);
-        });
-
-        // Add death events as scatter points
-        deathEvents.forEach(event => {
-            traces.push({
-                x: [event.date],
-                y: [survivalData[event.date][event.group]],
-                mode: 'markers',
-                marker: {
-                    symbol: 'x',
-                    size: 8,
-                    color: 'red'
-                },
-                showlegend: false,
-                hoverinfo: 'text',
-                hovertext: `Death: ${event.ear_tag}`
-            });
         });
 
         const layout = {
             title: 'Kaplan-Meier Survival Chart',
             xaxis: {
                 title: 'Date',
-                tickangle: 45
+                tickangle: 45,
+                type: 'date'
             },
             yaxis: {
-                title: 'Number of Mice Alive'
+                title: 'Number of Mice Alive',
+                rangemode: 'nonnegative'
             },
-            hovermode: 'closest'
+            hovermode: 'closest',
+            legend: {
+                title: {
+                    text: 'Groups'
+                }
+            }
         };
 
         Plotly.newPlot(container, traces, layout);
@@ -504,5 +510,14 @@
         };
 
         Plotly.newPlot(container, [trace], layout);
+    }
+
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+        });
     }
 })();
