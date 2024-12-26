@@ -68,9 +68,21 @@ Please write a SQL query to answer the following question. You output no comment
 graph_type can be one of:
 - kaplan-meier: when the question is about mortality or survivability of groups or cohorts
 - line: if it is showing values over time
-- bar: if it's a single 
-- pie
+- bar: if it's a single measurement comparison
+- pie: for proportional data
 
+For Kaplan-Meier survival analysis, we need:
+1. All mice that were alive at the start of the experiment
+2. Their death dates (DOD) if they died during the study
+3. Their group numbers for grouping
+4. Only include mice born before the start date
+5. Only include deaths up to the end date
+
+The query should return:
+- EarTag: to identify individual mice
+- DOD: death date (NULL if still alive)
+- Group: the group number
+This allows us to track when each mouse died (or if they're still alive) by group.
 
 ---
 
@@ -82,11 +94,11 @@ Answer: {"sql":"SELECT g.Number AS Group_Number, COUNT(md.EarTag) AS Alive_Mice_
 
 Question: Show me survival by group
 
-Answer: {"sql":"SELECT m.EarTag, m.DOD, g.Number as Group_Number FROM MouseData m JOIN "Group" g ON m.Group_Number = g.Number WHERE (m.DOD IS NULL OR m.DOD <= 2024-10-04)", "graph": "kaplan-meier"}
+Answer: {"sql":"SELECT m.EarTag, m.DOD, g.Number as Group FROM MouseData m JOIN \"Group\" g ON m.Group_Number = g.Number WHERE m.DOB <= '2023-11-03' AND (m.DOD IS NULL OR m.DOD <= '2024-10-04')", "graph": "kaplan-meier"}
 
 Question: How many females are still alive, by group
 
-Answer: {"sql":"SELECT g.Number, COUNT(md.EarTag)  FROM MouseData AS md  JOIN "Group" AS g  ON md.Group_Number = g.Number  WHERE md.DOD IS NULL  GROUP BY g.Number;", "graph": "bar"}
+Answer: {"sql":"SELECT g.Number, COUNT(md.EarTag) FROM MouseData AS md JOIN \"Group\" AS g ON md.Group_Number = g.Number WHERE md.DOD IS NULL AND md.Sex = 'F' GROUP BY g.Number;", "graph": "bar"}
 
 ---
 
