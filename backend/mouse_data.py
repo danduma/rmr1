@@ -5,7 +5,7 @@ from fastapi import HTTPException, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy import desc, create_engine
-from models import Base, MouseData as MouseModel
+from backend.models import Base, MouseData as MouseModel
 from image_storage import load_mouse_images
 import logging
 from dotenv import load_dotenv

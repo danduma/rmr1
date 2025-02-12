@@ -7,14 +7,14 @@ from typing import List, Optional
 import os
 import pandas as pd
 
-from llm_sql import call_llm_and_get_results
+from llm_sql import call_llm_and_get_results, clean_response, determine_chart_type, read_sql_query
 
 import logging
 logger = logging.getLogger(__name__)
 app = FastAPI()
 
 from image_storage import get_image_storage, load_mouse_images, get_images_for_mouse
-from mouse_data import get_full_mice_data_from_db
+from backend.mouse_data import get_full_mice_data_from_db
 
 # Load mice data from the database
 mice_data = get_full_mice_data_from_db()

@@ -3,7 +3,7 @@ from datetime import date
 import sqlite3
 import pandas as pd
 from data_processing.data_functions import get_survival_data
-from llm import get_llm_response
+from backend.llm import get_llm_response
 
 
 def clean_response(response):

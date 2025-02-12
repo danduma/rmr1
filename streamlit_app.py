@@ -35,7 +35,7 @@ import pandas as pd
 import plotly.express as px
 import json
 from litellm import completion
-from llm import get_llm_response
+from backend.llm import get_llm_response
 
 from data_processing.data_functions import convert_survival_data, get_survival_data
 

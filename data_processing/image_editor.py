@@ -8,7 +8,7 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QImage, QKeySequence, QShortcut, QNativeGestureEvent
 import os
 from dotenv import load_dotenv
-from mouse_data import get_db, get_full_mice_data_from_db
+from backend.mouse_data import get_db, get_full_mice_data_from_db
 
 load_dotenv()
 
