@@ -1,14 +1,30 @@
 from datetime import date
+import os
 from typing import Optional
 from fastapi import HTTPException, Depends
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
-
-from database import get_db
-from models import MouseData as MouseModel
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy import desc, create_engine
+from models import Base, MouseData as MouseModel
 from image_storage import load_mouse_images
 import logging
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 logger = logging.getLogger(__name__)
 

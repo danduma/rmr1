@@ -1,4 +1,5 @@
 import logging
+import os
 import warnings
 
 warnings.filterwarnings('ignore', message='.*ScriptRunContext.*')
@@ -200,7 +201,7 @@ with st.container():
             submit = st.form_submit_button("Run", help="Click to submit your question.", use_container_width=True)
 
 prompt = open("prompt.txt", "r").read()
-database_path = "data/mouse_study.db"
+database_path = os.getenv("DATABASE_URL")
 
 if submit or question:  # This will trigger on button click or when Enter is pressed
     response = get_llm_response(question, prompt)

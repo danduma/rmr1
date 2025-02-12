@@ -8,8 +8,7 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QPixmap, QImage, QKeySequence, QShortcut, QNativeGestureEvent
 import os
 from dotenv import load_dotenv
-from database import get_db
-from mouse_data import get_full_mice_data_from_db
+from mouse_data import get_db, get_full_mice_data_from_db
 
 load_dotenv()
 
@@ -80,7 +79,8 @@ def needs_review(row, mice_data):
     tag_error = tag_has_error(row)
     date_error = date_has_error(row)
     mismatch_error = group_sex_dont_match(row, mice_data)
-    return tag_error or date_error or mismatch_error
+    
+    return (tag_error or date_error or mismatch_error) and not row['corrupt']
 
 def update_full_text(df, idx):
     """

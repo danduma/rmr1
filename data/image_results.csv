@@ -10025,7 +10025,7 @@ DATE: 07MAR2023
 LEV-0001 - Group 5
 + 3 treatments
 male
-03/07/2023",False,5.0,M
+03/07/2023",False,5.0,F
 Cohort 2/Baseline/07MAR2023/030723 whole body pics side/IMG_1214.JPG,5284,2023-03-07,"</s>5284
 DATE: 07MAR2023
 0001 - Group 5
@@ -12953,7 +12953,8 @@ DATE: 09MAR2023
 LEV-0001-Group 3
 HSC + 3 mock control
 Male",,3.0,M
-Cohort 2/Baseline/09MAR2023/Pictures (top)/pictures (top)/IMG_1469.JPG,5341,2023-03-09,"</s>5341
+Cohort 2/Baseline/09MAR2023/Pictures (top)/pictures (top)/IMG_1469.JPG,5361,2023-03-09,"</s>5361
+5341
 09MAR2023
 DATE:
 LEV-0001-Group 3
@@ -13233,7 +13234,8 @@ DATE:
 LEV-0001-Group 3
 HSC + 3 mock control
 Male",False,3.0,M
-Cohort 2/Baseline/09MAR2023/Pictures (top)/pictures (top)/IMG_1458.JPG,5354,2023-03-09,"</s>5354
+Cohort 2/Baseline/09MAR2023/Pictures (top)/pictures (top)/IMG_1458.JPG,5364,2023-03-09,"</s>5364
+5354
 DATE:
 9MAR2023
 LEV-00011 - Group 3
@@ -18404,7 +18406,7 @@ DATE:
 LEV-0001 - Group 3
 HSC + 3 mock control
 Female
-03/13/2023",False,3.0,F
+03/13/2023",True,3.0,F
 Cohort 2/Baseline/13MAR23/Side/IMG_2142.JPG,5484,2023-03-13,"</s>5484
 13MAR2023
 DATE:
@@ -24360,7 +24362,7 @@ D
 up 6
 nock
 male
-03/21/2023",False,,M
+03/21/2023",False,6.0,F
 Cohort 3/Baseline/21 MAR Group 6 Batch 4/side/more side/IMG_2866.JPG,5663,2023-03-21,"</s>5663
 DATE:
 21MAR2023
@@ -24951,7 +24953,7 @@ Cohort 3/Baseline/21 MAR Group 6 and 7 batch 3/side/IMG_2823.JPG,5602,2023-03-21
 LATE
 Group 5
 OCK
-03/21/2023",False,5.0,
+03/21/2023",False,6.0,F
 Cohort 3/Baseline/21 MAR Group 6 and 7 batch 3/side/IMG_2821.JPG,5602,2023-03-21,"</s>5602
 DATE:
 21MAR2023
@@ -25029,7 +25031,7 @@ DATE:
 LEV-0001 - Group 5
 +AAV, 3 mock
 Female
-03/21/2023",False,5.0,F
+03/21/2023",False,6.0,F
 Cohort 3/Baseline/21 MAR Group 6 and 7 batch 3/side/IMG_2847.JPG,5716,2023-03-21,"</s>5716
 DATE:
 21MAR2023
@@ -25400,7 +25402,7 @@ DATE:
 -0001 - Group 6
 AV 3.nock
 male
-03/21/2023",False,6.0,M
+03/21/2023",False,6.0,F
 Cohort 3/Baseline/21 MAR Group 6 and 7 batch 3/side/IMG_2801.JPG,5600,2023-03-21,"</s>5600
 21 MAR2023
 DATE:
@@ -29428,7 +29430,7 @@ DATE:
 L.EV-0001 - Group 6
 V, 3 mock
 male
-03/27/2023",False,6.0,M
+03/27/2023",False,6.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3333.JPG,5710,2023-03-27,"</s>5710
 DATE:
 27MAR2023
@@ -29514,7 +29516,7 @@ DATE:
 LEV-0001 - Group 6
 AV, 3 naive
 male
-03/27/2023",False,6.0,M
+03/27/2023",False,6.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3293.JPG,5665,2023-03-27,"</s>5665
 DATE:
 27MAR2023
@@ -29544,7 +29546,7 @@ DATE:
 L.EV-0001 - Group 6
 V, 3 mock
 male
-03/27/2023",False,6.0,M
+03/27/2023",False,6.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3495.JPG,5691,2023-03-27,"</s>5691
 DATE:
 27MAR2023
@@ -29615,7 +29617,7 @@ DATE: 27MAR2023
 v-0001 - Group 6
 V, 3 naive
 male
-03/27/2023",False,6.0,M
+03/27/2023",False,6.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3286.JPG,5667,2023-03-27,"</s>5667
 DATE:
 27MAR2023
@@ -29717,7 +29719,7 @@ DATE: 27MAR2023
 0001 - Group 6
 3 mock
 male
-03/27/2023",False,6.0,M
+03/27/2023",False,6.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3491.JPG,5691,2023-03-27,"</s>5691
 5661
 5061
@@ -29865,7 +29867,7 @@ DATE:
 LEV-0001 - Group 6
 +V, 3 mock
 ale
-03/27/2023",False,6.0,
+03/27/2023",False,6.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3519.JPG,5646,2023-03-27,"</s>5646
 DATE: 27MAR2023
 LEV-000 Group 6
@@ -30218,7 +30220,7 @@ DATE: 27MAR2023
 LEV-0001 - Group 7
 + naive, 3 TX
 male
-03/27/2023",False,7.0,M
+03/27/2023",False,7.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3579.JPG,5700,2023-03-27,"</s>5700
 DATE:
 27MAR2023
@@ -30350,7 +30352,7 @@ DATE: 27MAR2023
 LEV-0001 - Group 7
 D naive, 3 TX
 male
-03/27/2023",False,7.0,M
+03/27/2023",False,7.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3546.JPG,5702,2023-03-27,"</s>5702
 DATE: 27MAR2023
 LEV-0001 - Group 7
@@ -30362,13 +30364,13 @@ DATE: 27MAR2023
 LEV-0001 - Group 7
 t mock, 3 TX
 male
-03/27/2023",False,7.0,M
+03/27/2023",False,7.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3585.JPG,5684,2023-03-27,"</s>5684
 DATE: 27MAR2023
 LEV-0001 - Group 7
 mock, 3 TX
 male
-03/27/2023",False,7.0,M
+03/27/2023",False,7.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3588.JPG,5684,2023-03-27,"</s>5684
 DATE: 27MAR2023
 LEV-001 - Group 7
@@ -30431,7 +30433,7 @@ DATE: 27MAR2023
 001 - Group 7
 ock, 3 TX
 male
-03/27/2023",False,7.0,M
+03/27/2023",False,7.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3416.JPG,5699,2023-03-27,"</s>5699
 DATE: 27MAR2023
 LEV-0001 - Group 7
@@ -30584,7 +30586,7 @@ DATE:
 -0001 - Group 7
 naive, 3 TX
 male
-03/27/2023",False,7.0,M
+03/27/2023",False,7.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3559.JPG,5701,2023-03-27,"</s>5701
 DATE:
 27MAR2023
@@ -30644,7 +30646,7 @@ DATE: 27MAR2023
 LEV-0001 - Group 7
 t naive, 3 TX
 male
-03/27/2023",False,7.0,M
+03/27/2023",False,7.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3404.JPG,5695,2023-03-27,"</s>5695
 DATE: 27MAR2023
 LEV - Group 7
@@ -35952,7 +35954,7 @@ DATE: 07APR2023
 LEV 0001 - Group 9
 ic mock - 3 Tx
 male
-04/07/2023",False,9.0,M
+04/07/2023",False,9.0,F
 "Cohort 4/Baseline/7April2023 Group 8,9,10 SIDE batch1 redo and some batch2/7April2023SIDE/IMG_4312.JPG",5944,2023-04-07,"</s>5944
 DATE: 07APR2023
 LEV-0001 - Group 9
@@ -36156,7 +36158,7 @@ DATE: 07APR2023
 L:0001 - Group 9
 tic mock - 3 TX
 male
-04/07/2023",False,9.0,M
+04/07/2023",False,9.0,F
 "Cohort 4/Baseline/7April2023 Group 8,9,10 SIDE batch1 redo and some batch2/7April2023SIDE/IMG_4277.JPG",5808,2023-04-07,"</s>5808
 DATE:
 07APR2023
@@ -36994,7 +36996,7 @@ DATE: 07APR2023
 LEV-0001 - Group 8
 mock - 3 TX
 male
-04/07/2023",False,8.0,M
+04/07/2023",False,8.0,F
 "Cohort 4/Baseline/7April2023 Group 8,9,10 SIDE batch1 redo and some batch2/7April2023SIDE/IMG_4193.JPG",5812,2023-04-07,"</s>5812
 DATE: 07APR2023
 LEV 001 - Group 8
@@ -37665,7 +37667,7 @@ LEV 001 - Group 9
 G
 tic naive - 3 TX
 male
-04/07/2023",False,9.0,M
+04/07/2023",False,9.0,F
 "Cohort 4/Baseline/7April2023 Group 8,9,10 SIDE batch1 redo and some batch2/7April2023SIDE/IMG_4280.JPG",5881,2023-04-07,"</s>5881
 DATE: 07APR2023
 LEV-0001 - Group 9
@@ -39320,7 +39322,7 @@ DATE:
 LEV-0001 - Group 8
 is alive - 3 TX
 male
-04/08/2023",False,8.0,M
+04/08/2023",False,8.0,F
 Cohort 4/Baseline/8April2023 Group 8 Batch 3/8April2023Group8batch3/side/IMG_4577.JPG,5892,2023-04-08,"</s>5892
 DATE:
 8APR2023
@@ -41778,7 +41780,7 @@ DATE: 10APR2023
 V-V-0001 - Group 10
 All Treatments
 male
-04/10/2023",False,10.0,M
+04/10/2023",False,10.0,F
 Cohort 4/Baseline/10April2023 Group 8 batch 3 redos and more/10AprilBatch3Side/IMG_4689.JPG,5916,2023-04-10,"</s>5916
 DATE: 10APPR2023
 LEV-0001 - Group 9
@@ -42090,7 +42092,7 @@ DATE: 10APR2023
 LE 001 - Group 10
 Treatments
 male
-04/10/2023",False,10.0,M
+04/10/2023",False,10.0,F
 Cohort 4/Baseline/10April2023 Group 8 batch 3 redos and more/10AprilBatch3Side/IMG_4833.JPG,5907,2023-04-10,"</s>5907
 DATE: 10APR2023
 LEV-0001 - Group 10
@@ -42109,7 +42111,7 @@ DATE: 10APPR2023
 LEV-0001 - Group 9
 mock - 3 TX
 male
-04/10/2023",False,9.0,M
+04/10/2023",False,9.0,F
 Cohort 4/Baseline/10April2023 Group 8 batch 3 redos and more/10AprilBatch3Side/IMG_4760.JPG,5742,2023-04-10,"</s>5742
 DATE: 10APR2023
 LEV-0001 - Group 9
@@ -42153,7 +42155,7 @@ DATE: 10APR2023
 0001 - Group 10
 ments
 male
-04/10/2023",False,10.0,M
+04/10/2023",False,10.0,F
 Cohort 4/Baseline/10April2023 Group 8 batch 3 redos and more/10AprilBatch3Side/IMG_4825.JPG,5908,2023-04-10,"</s>5908
 DATE: 10APPR2023
 LEV-0001 - Group 10
@@ -44756,7 +44758,7 @@ DATE: 11APR2023
 LEV-0001 - Group 8
 uscock - 3 TX
 male
-04/11/2023",False,8.0,M
+04/11/2023",False,8.0,F
 Cohort 4/Baseline/11Apr23 Group 8 batch 5/11apr2023 Group 8 batch 5 side/IMG_5364.JPG,6015,2023-04-11,"</s>6015
 DATE: 11APR2023
 LEV-0001 - Group 8
@@ -45899,7 +45901,7 @@ DATE: 11APR2023
 LEV-0001 - Group 10
 Treatments
 male
-04/11/2023",False,10.0,M
+04/11/2023",False,10.0,F
 Cohort 4/Baseline/11April2023Batch 4/11AprBatch4SIDE/IMG_5178.JPG,5974,2023-04-11,"</s>5974
 DATE:
 11APR2023
@@ -48881,7 +48883,7 @@ DATE:
 LEV-0001 - Group 1
 All Treatments
 Female
-04/12/2023",False,1.0,F
+04/12/2023",False,10.0,F
 Cohort 4/Baseline/12APR23/Side/IMG_5466.JPG,5755,2023-04-12,"</s>5755
 12APR23
 DATE:
@@ -50071,7 +50073,7 @@ DATE: 29JUN2023
 Group 1
 rock controls
 male
-06/29/2023 12:48",False,1.0,M
+06/29/2023 12:48",False,1.0,F
 Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 side/IMG_5746.JPG,5180,2023-06-29,"</s>5180
 DATE: 29JUN2023
 Group 1
@@ -50436,7 +50438,7 @@ DATE: 29JUN2023
 Group 1
 rock controls
 male
-06/29/2023 12:48",False,1.0,M
+06/29/2023 12:48",False,1.0,F
 Cohort 1/missing pic/IMG_5746.JPG,5180,2023-06-29,"</s>5180
 DATE: 29JUN2023
 Group 1
@@ -50516,7 +50518,7 @@ DATE: 30JUN2023
 Group 1
 naive controls
 male
-06/30/2023 12:13",False,1.0,M
+06/30/2023 12:13",False,1.0,F
 Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 side/group 1 female side jun30/IMG_5959.JPG,5160,2023-06-30,"</s>5160
 DATE: 30JUN2023
 Group 1
@@ -50648,7 +50650,7 @@ DATE: 30JUN2023
 Group 1
 ell native controls
 male
-06/30/2023 12:11",False,1.0,M
+06/30/2023 12:11",False,1.0,F
 Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 side/group 1 female side jun30/IMG_5988.JPG,5161,2023-06-30,"</s>5161
 DATE: 30JUN2023
 Group 1
@@ -51052,7 +51054,7 @@ DATE: 30JUN2023
 Group 1
 ive controls
 male
-06/30/2023 11:52",False,1.0,M
+06/30/2023 11:52",False,1.0,F
 Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 side/group 1 female side jun30/IMG_5932.JPG,5070,2023-06-30,"</s>5070
 DATE: 30JUN2023
 Group 1
@@ -51546,7 +51548,7 @@ DATE: 30JUN2023
 Group 1
 ive controls
 male
-06/30/2023 12:15",False,1.0,M
+06/30/2023 12:15",False,1.0,F
 Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 side/group 1 female side jun30/IMG_5994.JPG,5102,2023-06-30,"</s>5102
 DATE: 30JUN2023
 Group 1
@@ -51606,7 +51608,7 @@ DATE: 30JUN2023
 Group 1
 ock controls.
 male
-06/30/2023 13:53",False,1.0,M
+06/30/2023 13:53",False,1.0,F
 Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 side/group 1 female side jun30/IMG_5969.JPG,5163,2023-06-30,"</s>5163
 DATE: 30JUN2023
 Group 1
@@ -52014,7 +52016,10 @@ DATE: 30JUN2023
 Group 1
 all naive controls
 Female",,1.0,F
-Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4620.JPG,5052,2023-06-30,"</s>5052
+Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4620.JPG,5082,2023-06-30,"</s>5082
+5032
+5062
+5052
 5062
 5662
 5062
@@ -52044,7 +52049,8 @@ DATE: 30JUN2023
 Group 1
 sinock controls
 Female",,1.0,F
-Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4621.JPG,5052,2023-06-30,"</s>5052
+Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4621.JPG,5082,2023-06-30,"</s>5082
+5052
 DATE: 30JUN2023
 Group 1
 all mock controls
@@ -52099,7 +52105,8 @@ DATE: 30JUN2023
 Group 1
 all mock controls
 Female",,1.0,F
-Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4622.JPG,5052,2023-06-30,"</s>5052
+Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4622.JPG,5082,2023-06-30,"</s>5082
+5052
 532
 DATE: 30JUN2023-
 Group 1
@@ -52161,13 +52168,15 @@ DATE: 30JUN2023
 Group 1
 all rock controls
 Female",,1.0,F
-Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4626.JPG,5052,2023-06-30,"</s>5052
+Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4626.JPG,5082,2023-06-30,"</s>5082
+5052
 5/2
 DATE: 30JUN2023
 Group 1
 all rock controls
 Female",False,1.0,F
-Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4627.JPG,5052,2023-06-30,"</s>5052
+Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4627.JPG,5082,2023-06-30,"</s>5082
+5052
 DATE: 30JUN2023
 Group 1
 all rock controls
@@ -52223,7 +52232,8 @@ DATE: 30JUN2023
 Group 1
 all knock controls
 Female",,1.0,F
-Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4625.JPG,5052,2023-06-30,"</s>5052
+Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4625.JPG,5082,2023-06-30,"</s>5082
+5052
 DATE: 30JUN2023-
 Group 1
 all mock controls
@@ -52238,7 +52248,8 @@ DATE: 30JUN2023-
 Group 1
 all mock controls
 Female",,1.0,F
-Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4624.JPG,5052,2023-06-30,"</s>5052
+Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4624.JPG,5082,2023-06-30,"</s>5082
+5052
 DATE: 30JUN2023
 Group 1
 all mock controls
@@ -52279,13 +52290,15 @@ DATE: 30JUN2023
 Group 1
 all nave controls
 Female",,1.0,F
-Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4657.JPG,5052,2023-06-30,"</s>5052
+Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4657.JPG,5082,2023-06-30,"</s>5082
+5052
 999
 DATE: 30JUN2023
 Group 1
 all mock controls
 Female",False,1.0,F
-Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4656.JPG,5052,2023-06-30,"</s>5052
+Cohort 1/Cull Point 1/Group 1 Cull 1/Females/Group 1 female top/group 1 female top jun30/IMG_4656.JPG,5082,2023-06-30,"</s>5082
+5052
 DATE: 30JUN2023
 Group 1
 all mock controls
@@ -52632,7 +52645,7 @@ DATE: 5JULY2023
 LEV-0001 - Group 4
 + 3 naive controls
 male
-07/05/2023 12:13",False,4.0,M
+07/05/2023 12:13",False,4.0,F
 Cohort 2/Cull Point 1/Group 4 Cull 1/Group 4 females/Group 5 female side/IMG_6264.JPG,5356,2023-07-05,"</s>5356
 DATE: 5 JULY2023
 LEV-0001 - Group 4
@@ -53012,7 +53025,7 @@ DATE: 5JULY2023
 ev-0001 - Group 4
 3 native controls
 male
-07/05/2023 11:45",False,4.0,M
+07/05/2023 11:45",False,4.0,F
 Cohort 2/Cull Point 1/Group 4 Cull 1/Group 4 females/Group 5 female side/IMG_6221.JPG,5301,2023-07-05,"</s>5301
 DATE: 5 JULY2023
 LEV-0001 - Group 4
@@ -53849,7 +53862,11 @@ DATE: 5JULY2023
 LEV-00011-Group 4
 Navitocatox + 3 mock controls
 Female",False,4.0,F
-Cohort 2/Cull Point 1/Group 4 Cull 1/Group 4 females/Group 4 female top/IMG_4704.JPG,5676,2023-07-05,"</s>5676
+Cohort 2/Cull Point 1/Group 4 Cull 1/Group 4 females/Group 4 female top/IMG_4704.JPG,5476,2023-07-05,"</s>5476
+5776
+6776
+5776
+5676
 5776
 16
 DATE: 5JULY2023 -
@@ -57733,7 +57750,8 @@ DATE: 20JUL2023
 LEV-001 - Group 5
 AV mock + 3 treatments
 Male",,5.0,M
-Cohort 2/Cull Point 1/Group 5 Cull 1/Group 5 males Mock Top/IMG_5146.JPG,4000,2023-07-20,"</s>25
+Cohort 2/Cull Point 1/Group 5 Cull 1/Group 5 males Mock Top/IMG_5146.JPG,5326,2023-07-20,"</s>5326
+25
 DATE: 20JUL2023
 LEV-0001 - Group 5
 AV mock + 3 treatments
@@ -59820,7 +59838,7 @@ Cohort 2/Cull Point 1/Group 3 Cull 1/Females Side/IMG_0231.JPG,5265,2023-08-31,"
 DATE:
 LEV-0001 - Group 3
 naive control
-male",False,3.0,M
+male",False,3.0,F
 Cohort 2/Cull Point 1/Group 3 Cull 1/Females Side/IMG_0351.JPG,5488,2023-08-31,"</s>5488
 31AUG2023
 DATE:
@@ -60082,7 +60100,9 @@ DATE:
 LEV-0001 - Group 7
 Diet mock, 3 TX
 Female",,7.0,F
-Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5494.JPG,4000,2023-09-07,"</s>5786
+Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5494.JPG,5706,2023-09-07,"</s>5706
+5766
+5786
 5766
 5767
 5768
@@ -60165,13 +60185,15 @@ DATE:
 LEV-0001 - Group 7
 Diet naive, 3 TX
 Female",,7.0,F
-Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5468.JPG,5884,2023-09-07,"</s>5884
+Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5468.JPG,5684,2023-09-07,"</s>5684
+5884
 07SEP2023
 DATE:
 LEV-0001-Group 7
 Diet mock, 3 TX
 Female",False,7.0,F
-Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5440.JPG,5067,2023-09-07,"</s>5067
+Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5440.JPG,5607,2023-09-07,"</s>5607
+5067
 07SEP2023
 DATE:
 LEV-0001 - Group 7
@@ -60375,7 +60397,8 @@ DATE:
 LEV-0001 - Group 7
 Diet mock, 3 TX
 Female",,7.0,F
-Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5484.JPG,5597,2023-09-07,"</s>5597
+Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5484.JPG,5697,2023-09-07,"</s>5697
+5597
 07SEP2023
 DATE:
 LEV-0001 - Group 7
@@ -60400,7 +60423,8 @@ DATE:
 LEV-0001 - Group 7
 Diet mock, 3 TX
 Female",False,7.0,F
-Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5462.JPG,5881,2023-09-07,"</s>5881
+Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5462.JPG,5681,2023-09-07,"</s>5681
+5881
 07SEP2023
 DATE:
 LEV-0001 - Group 7
@@ -60462,7 +60486,12 @@ DATE:
 LEV-0001 - Group 7
 Diet mock, 3 TX
 Female",,7.0,F
-Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5475.JPG,5693,2023-09-07,"</s>5693
+Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5475.JPG,5698,2023-09-07,"</s>5698
+5697
+5696
+5695
+5694
+5693
 07SEP2023
 DATE:
 LEV-0001 - Group 7
@@ -60652,7 +60681,8 @@ DATE: 07SEP2023
 LEV-0001 - Group 7
 Diet mock, 3.1x
 Female",,7.0,F
-Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5439.JPG,5067,2023-09-07,"</s>5067
+Cohort 3/Cull Point 1/Group 7 Cull 1/Females Top/IMG_5439.JPG,5607,2023-09-07,"</s>5607
+5067
 07SEP2023
 DATE:
 LEV-0001 - Group 7
@@ -61703,7 +61733,8 @@ DATE: 22SEP2023
 LEV-0001-Group 7
 Diet mock, 3 X
 Male",,7.0,M
-Cohort 3/Cull Point 1/Group 7 Cull 1/Males Top/IMG_5669.JPG,5550,2023-09-22,"</s>5550
+Cohort 3/Cull Point 1/Group 7 Cull 1/Males Top/IMG_5669.JPG,5650,2023-09-22,"</s>5650
+5550
 DATE: 22SEP2023
 LEV-001 - Group 7
 Diet mock, 3 TX
@@ -61924,7 +61955,8 @@ DATE: 22SEP2023
 LEV-0001 - Group 7
 Diet mock, 3 TX
 Male",,7.0,M
-Cohort 3/Cull Point 1/Group 7 Cull 1/Males Top/IMG_5676.JPG,5551,2023-09-22,"</s>5551
+Cohort 3/Cull Point 1/Group 7 Cull 1/Males Top/IMG_5676.JPG,5651,2023-09-22,"</s>5651
+5551
 DATE: 22SEP2023
 LEV-0001 - Group 7
 Diet mock, 3 TX
@@ -62002,7 +62034,8 @@ DATE: 22SEP2023
 LEV-0001 - Group 7
 Diet mock, 3 TX
 Male",False,7.0,M
-Cohort 3/Cull Point 1/Group 7 Cull 1/Males Top/IMG_5670.JPG,5550,2023-09-22,"</s>5550
+Cohort 3/Cull Point 1/Group 7 Cull 1/Males Top/IMG_5670.JPG,5650,2023-09-22,"</s>5650
+5550
 DATE: 22SEP2023
 LEV-0001 - Group 7
 Diet mock, 3 TX
@@ -62564,7 +62597,8 @@ DATE:
 LEV-0001 - Group 7
 Diet mock, 3 TX
 Male",,7.0,M
-Cohort 3/Cull Point 1/Group 7 Cull 1/Males Side/IMG_0700.JPG,5551,2023-09-22,"</s>5551
+Cohort 3/Cull Point 1/Group 7 Cull 1/Males Side/IMG_0700.JPG,5651,2023-09-22,"</s>5651
+5551
 22SEP2023
 DATE:
 LEV-0001 - Group 7
@@ -62648,7 +62682,8 @@ DATE:
 LEV-0001 - Group 7
 Diet mock, 3 TX
 Male",,7.0,M
-Cohort 3/Cull Point 1/Group 7 Cull 1/Males Side/IMG_0693.JPG,5550,2023-09-22,"</s>5550
+Cohort 3/Cull Point 1/Group 7 Cull 1/Males Side/IMG_0693.JPG,5650,2023-09-22,"</s>5650
+5550
 DATE:
 22SEP2023
 LEV-0001 - Group 7
@@ -62899,7 +62934,8 @@ DATE:
 LEV-0001 - Group 7
 Diet mock, 3 TX
 Male",,7.0,M
-Cohort 3/Cull Point 1/Group 7 Cull 1/Males Side/IMG_0641.JPG,5646,2023-09-22,"</s>5646
+Cohort 3/Cull Point 1/Group 7 Cull 1/Males Side/IMG_0641.JPG,5645,2023-09-22,"</s>5645
+5646
 22SEP2023
 DATE:
 LEV-0001 - Group 7
@@ -84278,7 +84314,7 @@ DATE: 1GAPR2023
 LEV-0001 - Group 3
 HSC naive - 3 TX,
 Male
-04/10/2023",False,3.0,M
+04/10/2023",False,8.0,M
 Cohort 4/Baseline/10AprilBatch4 Group 8/10AprlBATCH4SIDE/IMG_4928.JPG,4000,,</s>391,True,,
 Cohort 4/Baseline/10April2023 Group 8 batch 3 redos and more/10AprilBatch3Side/IMG_4822.JPG,5911,2023-04-10,"</s>5911
 DATE: 10APPR023
@@ -84314,7 +84350,7 @@ Cohort 4/Baseline/10April2023 Group 8 batch 3 redos and more/10AprilBatch3Top/IM
 DATE: 10APR2023
 LEV-0001 - Group 9
 Senylotic naive - 3 TX
-Male",False,9.0,M
+Male",True,9.0,M
 Cohort 4/Baseline/10April2023 Group 8 batch 3 redos and more/10AprilBatch3Top/IMG_3514.JPG,5996,2023-04-10,"</s>5996
 DATE: 10APR2023
 LEV-0001 - Group 9
@@ -84526,7 +84562,7 @@ Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8558.JPG,5904,2024-03-10,"</s>590
 DATE: 3/10/24
 LEV-00011 - Group 10
 All Treatments
-Emale",False,10.0,M
+Emale",False,10.0,F
 Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8564.JPG,5907,2024-03-10,"</s>5907
 DATE: 3/10/24
 LEV-0001 - Group 10
@@ -84561,7 +84597,7 @@ Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8581.JPG,5972,2024-03-10,"</s>597
 DATE: 3/10/24
 LEV-0001-Group 10
 I'll Treatments
-famale",False,10.0,M
+famale",False,10.0,F
 Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8542.JPG,6021,2024-03-10,"</s>6021
 DATE: 3/10/24
 LEV-0001 - Group 10
@@ -84587,12 +84623,12 @@ Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8580.JPG,5972,2024-03-10,"</s>597
 DATE: 3/10/24
 LEV-0001-Group 10
 all Treatments
-fmale",False,10.0,M
+fmale",False,10.0,F
 Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8569.JPG,5910,2024-03-10,"</s>5910
 DATE: 3/10/24
 LEF: 00001 - Group 10
 All Treatments
-ramale",False,10.0,M
+ramale",False,10.0,F
 Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8555.JPG,5886,2024-03-10,"</s>5886
 DATE: 3/10/24
 LEV-0001-Group 10
@@ -84612,12 +84648,12 @@ Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8554.JPG,5873,2024-03-10,"</s>587
 DATE: 3/10/24
 LEV-0001 - Group 10
 T Treatments
-male",False,10.0,M
+male",False,10.0,F
 Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8568.JPG,5910,2024-03-10,"</s>5910
 DATE: 3/10/24
 LEF: 001 - Group 10
 All Treatments
-remale",False,10.0,M
+remale",False,10.0,F
 Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8587.JPG,5973,2024-03-10,"</s>5973
 3/10/24
 DATE:
@@ -84688,7 +84724,7 @@ Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8585.JPG,5976,2024-03-10,"</s>597
 DATE: 3/10/24
 LEY-0001 - Group 10
 All Treatments
-amale",False,10.0,M
+amale",False,10.0,F
 Cohort 4/Cull Point 2/Group 10/Females/Top/IMG_8535.JPG,5987,2024-03-10,"</s>5987
 DATE: 3/10/24
 LEV-0001 - Group 10
@@ -84843,7 +84879,7 @@ DATE:
 -V-0001 - Group 10
 Treatments
 male
-03/10 /2024 10:09",False,10.0,M
+03/10 /2024 10:09",False,10.0,F
 Cohort 4/Cull Point 2/Group 10/Females/Side/IMG_8026.JPG,5919,2024-03-10,"</s>5919
 DATE:
 3/10/24
@@ -87891,7 +87927,7 @@ DATE: 04/10/2024
 LEV-0001 - Group 3
 HSC naive - 3 TX
 Male
-04/10 /2024 14:36",False,3.0,M
+04/10 /2024 14:36",False,8.0,M
 Cohort 4/Cull Point 2/Group 8/Males/Side/IMG_9087.JPG,5948,2024-04-10,"</s>5948
 DATE: 04/10/2024
 LEV-0001 - Group 8
@@ -88255,7 +88291,7 @@ DATE: 04/10/2024
 LEV-0001 - Group 3
 HSC naive - 3 TX
 Male
-04/10 /2024 14:19",False,3.0,M
+04/10 /2024 14:19",False,8.0,M
 Cohort 4/Cull Point 2/Group 8/Males/Side/IMG_9061.JPG,5845,2024-04-10,"</s>5845
 DATE: 04/10/2024
 LEV-0001 - Group 8
@@ -90162,8 +90198,9 @@ E HUI Y2023
 ip 4
 arive controls
 emale
-07/05/2023 11:43",False,4.0,M
-Cohort 2/Cull Point 1/Group 4 Cull 1/Group 4 females/Group 4 female top/IMG_4931.JPG,5556,2023-07-05,"</s>5556
+07/05/2023 11:43",False,4.0,F
+Cohort 2/Cull Point 1/Group 4 Cull 1/Group 4 females/Group 4 female top/IMG_4931.JPG,5356,2023-07-05,"</s>5356
+5556
 DATE: 5JULY2023
 LEV-0001 - Group 4
 Navitoclax + 3 nave controls
@@ -93392,14 +93429,14 @@ Female",,6.0,F
 Cohort 3/Baseline/21 MAR Group 6 and 7 batch 3/side/IMG_2818.JPG,5603,2023-03-21,"</s>5603
 LEV-0001 - Group 5
 AAV. 3ock
-03/21/2023",False,5.0,
+03/21/2023",False,5.0,F
 Cohort 3/Baseline/21 MAR Group 6 and 7 batch 3/side/IMG_2819.JPG,5603,2023-03-21,"</s>5603
 2IMAR2023
 DATE:
 LEV-0001 - Group 6
 AAV, 3 r.rock
 ermale
-03/21/2023",False,6.0,M
+03/21/2023",False,6.0,F
 Cohort 3/Baseline/21 MAR Group 6 and 7 batch 3/side/IMG_2826.JPG,5674,2023-03-21,"</s>5674
 2IMAR2023
 DATE:
@@ -93419,7 +93456,7 @@ AMA B2023
 group 7
 ve, 3 TX
 male
-03/21/2023",False,7.0,M
+03/21/2023",False,7.0,F
 Cohort 3/Baseline/21 MAR Group 6 and 7 batch 3/side/IMG_2840.JPG,5671,2023-03-21,"</s>5671
 DATE:
 LEV-0001 - Group 7
@@ -93443,7 +93480,7 @@ D.A.E.
 LEV-0001 - Group 5
 +AAV, 3 mock
 Female
-03/21/2023",False,5.0,F
+03/21/2023",False,6.0,F
 Cohort 3/Baseline/21 MAR Group 6 and 7 batch 3/side/IMG_2829.JPG,5674,2023-03-21,"</s>5674
 DAT MAR2023
 DAT
@@ -93615,7 +93652,7 @@ DATE 27MAR2023
 001 - Group 7
 mock, 3 TX
 male
-03/27/2023",False,7.0,M
+03/27/2023",False,7.0,F
 Cohort 3/Baseline/27 MAR 2023 SIDE/Batch 4and5 SIDE/IMG_3604.JPG,5682,2023-03-27,"</s>5682
 023
 oup 7
@@ -93926,7 +93963,7 @@ DATE:
 LEV-0001 - Group 6
 +AAV, 3 mock
 male
-01/08/2024 15:32",False,6.0,M
+01/08/2024 15:32",False,6.0,F
 Cohort 3/Cull Point 2/Group 6/Females/Side/IMG_7155.JPG,5689,2024-01-08,"</s>5689
 5889
 DATE: 1/8/24
@@ -94112,7 +94149,7 @@ DATE:
 LEV-0001 - Group 6
 AAV, 3 návé
 male
-01/08/2024 15:20",False,6.0,M
+01/08/2024 15:20",False,6.0,F
 Cohort 3/Cull Point 2/Group 6/Females/Side/IMG_7127.JPG,5560,2024-01-08,"</s>5560
 DATE:
 1/8/24
@@ -109262,7 +109299,7 @@ OmniR2023
 LEV-0001 - Group 3
 HSC + 3 naive control
 Female",,3.0,F
-Cohort 2/Baseline/08MAR2023/Pictures side (afternoon)/IMG_0004.JPG,4000,2023-03-08,</s>٠٠,False,,
+Cohort 2/Baseline/08MAR2023/Pictures side (afternoon)/IMG_0004.JPG,4000,2023-03-08,</s>٠٠,True,,
 Cohort 2/Baseline/08MAR2023/Pictures top/IMG_1311.JPG,5311,2023-03-08,"</s>5311
 OBMAR2023
 DATE:
@@ -110995,7 +111032,7 @@ DATE:
 LEV-001 - Group 5
 AAV naive + 3 treatments
 Fermale
-06/2020/24 11:02",False,5.0,M
+06/2020/24 11:02",False,5.0,F
 Cohort 2/Cull Point 2/Group 5/Female/Side/IMG_0290.JPG,5393,2024-06-20,"</s>5393
 DATE:
 06/20/2024
@@ -112285,7 +112322,7 @@ DATE:
 LEV-0001 - Group 5
 HSC + 3 mock control &
 Female
-04/ 15/20 24 13:43",False,5.0,F
+04/ 15/20 24 13:43",False,8.0,F
 Cohort 2/Cull Point 4/Group 3/Females/Side/IMG_9159.JPG,5368,2024-04-15,"</s>5368
 04/15/2024
 DATE:
@@ -118678,7 +118715,8 @@ DATE: 9/10/11
 Group 2
 + diet, 3, naive controls
 Female",False,2.0,F
-Cohort 1/Cull Point 4/Group 2/Females/Top/IMG_0729.JPG,4000,2024-09-10,"</s>5
+Cohort 1/Cull Point 4/Group 2/Females/Top/IMG_0729.JPG,5200,2024-09-10,"</s>5200
+5
 DATE: 9/10/11
 Group 2
 + diet, 3 mock controls
