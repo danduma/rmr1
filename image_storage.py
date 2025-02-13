@@ -7,6 +7,10 @@ import pandas as pd
 from google.oauth2 import service_account
 from google.api_core import exceptions as google_exceptions
 import logging
+from data_processing.utils import generate_full_image_path
+
+# Set pandas option to prevent downcasting warning
+pd.set_option('future.no_silent_downcasting', True)
 
 logger = logging.getLogger(__name__)
 
@@ -87,23 +91,35 @@ def get_image_storage():
         return GCSImageStorage(os.getenv('GCS_BUCKET_NAME'), os.getenv('GCS_BASE_PATH'))
     else:
         return LocalImageStorage(os.getenv('LOCAL_BASE_PATH'))
-
+    
 def load_mouse_images(image_csv_path='data/image_results.csv'):
     """Load and process mouse images from CSV"""
     # Read the CSV file with ear_tag as nullable integer type
     df = pd.read_csv(image_csv_path, dtype={'ear_tag': 'Int64'})
     
-    # Drop NA values before grouping
-    df = df.dropna(subset=['ear_tag'])
+    # Drop rows with missing ear_tags and corrupt images
+    corrupt_series = df.get('corrupt', pd.Series(False, index=df.index))
+    df = df[
+        df['ear_tag'].notna() & 
+        ~corrupt_series.fillna(False)
+    ]
     
-    # Group by ear_tag and create a dictionary of records
-    mouse_images = df.groupby('ear_tag').apply(
-        lambda x: x[['file_path', 'date', 'full_text']].to_dict('records')
-    ).to_dict()
+    # Group by ear_tag and create a dictionary of images for each mouse
+    result = {}
+    for ear_tag, group in df.groupby('ear_tag'):
+        if pd.isna(ear_tag):
+            continue
+            
+        # Only include rows that have a valid new_file_path
+        valid_images = group[group['new_file_path'].notna()]
+        if not valid_images.empty:
+            # Create list of dicts with only file_path and date
+            images = [{'file_path': row['new_file_path'], 'date': row['date']} 
+                     for _, row in valid_images.iterrows()]
+            result[int(ear_tag)] = images
     
-    # Convert ear_tag keys to strings
-    return {str(k): v for k, v in mouse_images.items()}
+    return result
 
 def get_images_for_mouse(ear_tag, mouse_images):
-    """Get images for a specific mouse by ear tag"""
-    return mouse_images.get(str(ear_tag), [])
+    """Get list of image paths for a specific mouse"""
+    return mouse_images.get(ear_tag, [])

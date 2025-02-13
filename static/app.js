@@ -206,6 +206,20 @@
         // Clear existing pictures
         $('#mouse-pictures').empty();
         
+        // Add modal if it doesn't exist
+        if (!document.getElementById('imageModal')) {
+            const modal = `
+                <div id="imageModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); overflow: auto;">
+                    <img id="modalImage" style="margin: auto; display: block; max-width: 90%; max-height: 90vh; position: relative; top: 50%; transform: translateY(-50%);">
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', modal);
+            
+            // Add click event to close modal
+            document.getElementById('imageModal').addEventListener('click', function() {
+                this.style.display = 'none';
+            });
+        }
+        
         // Update selected mouse name
         $('#selected-mouse-name').text('Selected Mouse: ' + earTag);
         
@@ -246,8 +260,16 @@
                             picturesRow.append(`
                                 <div class="col-md-6 mb-3">
                                     <img src="${imgSrc}" 
-                                         class="img-fluid rounded" 
-                                         title="${picData.full_text || ''}">
+                                         class="img-fluid rounded cursor-pointer" 
+                                         title="${picData.full_text || ''}"
+                                         style="cursor: pointer"
+                                         onclick="(function(e) {
+                                            const modal = document.getElementById('imageModal');
+                                            const modalImg = document.getElementById('modalImage');
+                                            modal.style.display = 'block';
+                                            modalImg.src = '${imgSrc}';
+                                            e.stopPropagation();
+                                         })(event)">
                                     <p class="mt-2">${picData.file_path || ''}</p>
                                 </div>
                             `);

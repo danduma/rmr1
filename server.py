@@ -21,7 +21,7 @@ mice_data = get_full_mice_data_from_db()
 
 # Initialize storage based on environment
 image_storage = get_image_storage()
-mouse_images = load_mouse_images()
+mouse_images = load_mouse_images('data/image_results.csv')
 
 # Templates
 templates = Jinja2Templates(directory="templates")

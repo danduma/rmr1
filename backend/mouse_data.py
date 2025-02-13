@@ -53,7 +53,7 @@ def get_full_mice_data_from_db(sort_column: str = None, sort_order: str = 'asc',
     query = db.query(MouseModel)
         
     if sort_column and sort_column != 'PictureCount':
-        order_column = getattr(MouseModel, sort_column.lower())
+        order_column = getattr(MouseModel, sort_column)
         if sort_order.lower() == 'desc':
             order_column = desc(order_column)
         query = query.order_by(order_column)
@@ -75,7 +75,7 @@ def get_full_mice_data_from_db(sort_column: str = None, sort_order: str = 'asc',
             Stagger=mouse.Stagger,
             Group_Number=mouse.Group_Number,
             Cohort_id=mouse.Cohort_id,
-            PictureCount=len(mouse_images.get(str(mouse.EarTag), []))
+            PictureCount=len(mouse_images.get(mouse.EarTag, []))
         )
         for mouse in mice
     ]

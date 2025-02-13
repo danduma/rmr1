@@ -1,12 +1,12 @@
-[tool.poetry]
-name = "rmr1"
-version = "0.1.0"
-description = "RMR1"
-authors = ["Daniel Duma <danielduma@gmail.com>"]
-readme = "README.md"
+# [tool.poetry]
+# name = "rmr1"
+# version = "0.1.0"
+# description = "RMR1"
+# authors = ["Daniel Duma <danielduma@gmail.com>"]
+# readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 pandas = "^2.2.3"
 openpyxl = "^3.1.5"
 xlrd = "^2.0.1"

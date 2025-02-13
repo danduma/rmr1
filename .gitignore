@@ -188,3 +188,5 @@ yarn-error.log*
 vertexai-api-key.json
 gcs_key*.json
 .~*
+
+*/ssh/*
