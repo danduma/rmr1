@@ -177,6 +177,8 @@ build/
 .env
 .local
 .local.*
+.env.local
+.env.prod
 
 # Verbose logging
 npm-debug.log*
